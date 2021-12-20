@@ -21,3 +21,9 @@ uvicorn==0.16.0
 watchgod==0.7
 websockets==9.1
 zipp==3.6.0
+
+sqlalchemy
+passlib
+bcrypt
+python-jose
+python-multipart
