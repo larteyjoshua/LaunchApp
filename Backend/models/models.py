@@ -14,16 +14,14 @@ class Company(Base):
     addedBy = Column(Integer, ForeignKey('managers.id'))
     manager = relationship("Manager", back_populates="companies")
     users = relationship("User", back_populates="company")
-    orders = relationship("Order", back_populates="companyowner")
-    companyowner = relationship("Account", back_populates="companies")
+    orders = relationship("Order")
+    account = relationship("Account", uselist=False, back_populates="company")
 
 class Role(Base):
     __tablename__ = 'roles'
     id = Column(Integer, primary_key =True, index = True)
     name = Column(String)
     dateAdded = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-    addedBy = Column(Integer, ForeignKey('managers.id'))
-    roleowner = relationship("Manager", back_populates="roles")
 
 class User(Base):
     __tablename__ = 'users'
@@ -35,7 +33,8 @@ class User(Base):
     is_active = Column(Boolean(), default=True)
     companyId =  Column(Integer, ForeignKey('company.id'))
     company = relationship("Company", back_populates="users")
-    orders = relationship("Order", back_populates="orderowner")
+    orders = relationship("Order")
+    feedbacks = relationship("Feedback")
 
 class Manager(Base):
     __tablename__ = 'managers'
@@ -47,9 +46,9 @@ class Manager(Base):
     isActive = Column(Boolean(), default=True)
     isSuper = Column(Boolean(), default=False)
     roleId =  Column(Integer, ForeignKey('roles.id'))
-    companies = relationship("Company", back_populates="manager")
-    roles = relationship("Role", back_populates="roleowner")
+    companies = relationship("Company")
     foods = relationship("Food", back_populates="foodowner")
+    roles = relationship("Role", backref="managers")
 
 class Food(Base):
     __tablename__ = 'foods'
@@ -58,7 +57,7 @@ class Food(Base):
     ingredients = Column(String)
     dateAdded = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     price = Column(Float)
-    addedBy = Column(Integer, ForeignKey('users.id'))
+    addedBy = Column(Integer, ForeignKey('managers.id'))
     imagePath = Column(String)
     foodowner = relationship("Manager", back_populates="foods")
 
@@ -70,7 +69,6 @@ class Order(Base):
     cost = Column(Float)
     riderId = Column(Integer, ForeignKey('riders.id'))
     userId = Column(Integer, ForeignKey('users.id'))
-    orderowner = relationship("User", back_populates="orders")
     riderowner = relationship("Rider", back_populates="orders")
     companyowner = relationship("Company", back_populates="orders")
 
@@ -82,8 +80,9 @@ class Feedback(Base):
     stars = Column(Integer)
     dateCommented = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     commentedBy = Column(Integer, ForeignKey('users.id'))
-    owner = relationship("User", back_populates="items")
 
+
+class Rider(Base):
     __tablename__ = 'riders'
     id = Column(Integer, primary_key =True, index = True)
     name = Column(String)
@@ -101,5 +100,5 @@ class Account(Base):
     balance = Column(Float)
     modifyBy = Column(Integer, ForeignKey('managers.id'))
     dateModified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-    companies = relationship("Company", back_populates="companyowner")
+    company = relationship("Company", back_populates="account")
 

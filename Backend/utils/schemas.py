@@ -3,13 +3,19 @@ from pydantic import BaseModel
 from models.models import Order
 
 class User(BaseModel):
-    name:str
+    fullName:str
     email:str
-    password:str
+    companyId: Optional[int] = None
 
-# class ShowUser(BaseModel):
-#     name:str
-#     email:str
-#     orders : List[Order] =[]
-#     class Config():
-#         orm_mode = True
+    class Config():
+        orm_mode = True
+
+class ShowUser(BaseModel):
+    id: int
+    fullName:str
+    email:str
+    password: str
+    companyId: Optional[int] = None
+    is_active: bool
+    class Config():
+        orm_mode = True
