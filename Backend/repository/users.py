@@ -9,7 +9,7 @@ from fastapi.encoders import jsonable_encoder
 def create(request: schemas.User, db: Session):
     user = db.query(models.User).filter(models.User.email == request.email).first()
     if user:
-        return{"info": f"User with the email {request.email} is already exist"}
+        return{"info": f"User with the email {request.email} already exist"}
     else: 
         new_user = models.User(fullName=request.fullName, email=request.email, password=Hash.bcrypt(request.password))
         db.add(new_user)
@@ -49,13 +49,6 @@ def update(id: int, request: schemas.ShowUser, db: Session):
     user.fullName = request.fullName
     user.companyId = request.companyId
     user.is_active = request.is_active
-    # updated_user = user
-    
-    # print(updated_user.password)
-  #  db.add(updated_user)
-    # db.query(models.User).filter(models.User.id == id).update(dict(updated_user))
-    #user.update(request.dict(exclude_unset= True))
-    # db.refresh(user)
     db.commit()
     db.refresh(user)
     return user

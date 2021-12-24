@@ -17,5 +17,31 @@ class ShowUser(BaseModel):
     password: str
     companyId: Optional[int] = None
     is_active: bool
+    
     class Config():
         orm_mode = True
+
+
+class ShowAdmin(BaseModel):
+    id: int
+    fullName:str
+    email:str
+    password: str
+    roleId: Optional[int] = None
+    isActive: bool
+    isSuper: bool
+    
+    class Config():
+        orm_mode = True
+        
+        
+        
+class Admin(BaseModel):
+    fullName:str
+    email:str
+    password: str
+    isSuper: Optional[bool] = None
+    roleId: Optional[int] = None
+
+    class Config():
+        orm_mode = True        
