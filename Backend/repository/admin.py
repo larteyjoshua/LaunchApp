@@ -42,7 +42,7 @@ def update(id: int, request: schemas.ShowUser, db: Session):
     admin = db.query(models.Manager).filter(models.Manager.id == id).first()
     if not admin:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"User with id {id} not found")
+                            detail=f"Admin with id {id} not found")
     
     admin.password = Hash.bcrypt(request.password) 
     admin.email = request.email
