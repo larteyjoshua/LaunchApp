@@ -10,6 +10,8 @@ class Company(Base):
     name = Column(String)
     email = Column(String, unique=True, index=True)
     location = Column(String)
+    isActive = Column(Boolean(), default=True)
+    phoneNumber = Column(String)
     dateAdded = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     addedBy = Column(Integer, ForeignKey('managers.id'))
     manager = relationship("Manager", back_populates="companies")
@@ -26,7 +28,7 @@ class Role(Base):
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, index=True)
-    fullName = Column(String)
+    fullName = Column(String)   
     email = Column(String, unique=True, index=True)
     password = Column(String)
     date = Column(DateTime, default=datetime.now, onupdate=datetime.now)

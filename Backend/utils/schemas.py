@@ -1,6 +1,7 @@
 from typing import List, Optional
 from pydantic import BaseModel
 from models.models import Order
+from datetime import  datetime
 
 class User(BaseModel):
     fullName:str
@@ -49,5 +50,21 @@ class Admin(BaseModel):
 class Role(BaseModel):
     id: int
     name: str
+    dateAdded: datetime
+    class Config():
+        orm_mode = True 
+        
+class Company(BaseModel):
+    name:str
+    email:str
+    phoneNumber: str = None
+    isActive: Optional[bool] = None
+    location: str
+    dateAdded: datetime
+    addedBy: int
+
+    class Config():
+        orm_mode = True
+
     class Config():
         orm_mode = True 
