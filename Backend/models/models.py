@@ -51,6 +51,7 @@ class Manager(Base):
     companies = relationship("Company")
     foods = relationship("Food", back_populates="foodowner")
     roles = relationship("Role", backref="managers")
+    riders = relationship("Rider")
 
 class Food(Base):
     __tablename__ = 'foods'
@@ -88,10 +89,13 @@ class Rider(Base):
     __tablename__ = 'riders'
     id = Column(Integer, primary_key =True, index = True)
     name = Column(String)
+    email = Column(String, unique=True, index=True)
     motorNumber = Column(String)
     tellNumber = Column(String)
     dateAdded = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    addedBy = Column(Integer, ForeignKey('managers.id'))
     orders = relationship("Order", back_populates="riderowner")
+    manager = relationship("Manager", back_populates="riders")
 
 class Account(Base):
     __tablename__ = 'accounts'

@@ -7,7 +7,7 @@ from typing import List
 
 router = APIRouter(
     prefix = '/user',
-    tags = ['users']
+    tags = ['Users']
 )
 get_db = database.get_db
 

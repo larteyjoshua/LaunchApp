@@ -42,7 +42,7 @@ def update(id: int, request: schemas.ShowUser, db: Session):
     role = db.query(models.Role).filter(models.Role.id == id).first()
     if not role:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"User with id {id} not found")
+                            detail=f"Role with id {id} not found")
      
     role.name = request.name
     db.commit()

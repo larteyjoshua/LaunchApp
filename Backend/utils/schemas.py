@@ -6,6 +6,7 @@ from datetime import  datetime
 class User(BaseModel):
     fullName:str
     email:str
+    password: str
     companyId: Optional[int] = None
 
     class Config():
@@ -41,20 +42,34 @@ class Admin(BaseModel):
     fullName:str
     email:str
     password: str
-    isSuper: Optional[bool] = None
     roleId: Optional[int] = None
 
     class Config():
         orm_mode = True        
 
 class Role(BaseModel):
+    name: str
+    class Config():
+        orm_mode = True 
+        
+class ShowRole(BaseModel):
     id: int
     name: str
     dateAdded: datetime
     class Config():
-        orm_mode = True 
+        orm_mode = True
         
 class Company(BaseModel):
+    name:str
+    email:str
+    phoneNumber: str = None
+    location: str
+    addedBy: int
+
+    class Config():
+        orm_mode = True
+        
+class ShowCompany(BaseModel):
     name:str
     email:str
     phoneNumber: str = None
@@ -66,5 +81,23 @@ class Company(BaseModel):
     class Config():
         orm_mode = True
 
+class Rider(BaseModel):
+    name:str
+    email:str
+    tellNumber: str = None
+    motorNumber: str
+    addedBy: int
+
     class Config():
-        orm_mode = True 
+        orm_mode = True
+
+class ShowRider(BaseModel):
+    name:str
+    email:str
+    tellNumber: str = None
+    motorNumber: str
+    dateAdded: datetime
+    addedBy: int = None
+
+    class Config():
+        orm_mode = True

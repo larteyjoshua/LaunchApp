@@ -7,7 +7,7 @@ from typing import List
 
 router = APIRouter(
     prefix = '/role',
-    tags = ['roles']
+    tags = ['Roles']
 )
 get_db = database.get_db
 
@@ -15,16 +15,16 @@ get_db = database.get_db
 def create_role(request: schemas.Role, db: Session = Depends(get_db)):
     return roles.create(request, db)
 
-@router.get('/{id}', response_model=schemas.Role)
+@router.get('/{id}', response_model=schemas.ShowRole)
 def get_role(id: int, db: Session = Depends(get_db)):
     return roles.show(id, db)
 
-@router.get('/',  response_model=List[schemas.Role]  )
+@router.get('/',  response_model=List[schemas.ShowRole]  )
 def all(db: Session = Depends(get_db)):
     return roles.get_all(db)
 
 
-@router.put('/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.Role)
+@router.put('/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowRole)
 def update(id: int, request: schemas.Role, db: Session = Depends(get_db)):
     return roles.update(id, request, db)
 
