@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from models import  models
 from utils.database import SessionLocal, engine
-from routers import users, admin, roles, company, riders, foods, orders
+from routers import users, admin, roles, company, riders, foods, orders, feedbacks
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -17,3 +17,4 @@ app.include_router(company.router)
 app.include_router(riders.router)
 app.include_router(foods.router)
 app.include_router(orders.router)
+app.include_router(feedbacks.router)

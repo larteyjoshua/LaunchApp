@@ -46,7 +46,7 @@ def update(id: int, request: schemas.Food, db: Session):
     food = db.query(models.Food).filter(models.Food.id == id).first()
     if not food:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"User with id {id} not found")
+                            detail=f"Food with id {id} not found")
     
     food.name = request.name
     food.ingredients = request.ingredients

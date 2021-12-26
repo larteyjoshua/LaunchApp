@@ -56,6 +56,7 @@ class ShowRole(BaseModel):
     id: int
     name: str
     dateAdded: datetime
+    
     class Config():
         orm_mode = True
         
@@ -127,6 +128,7 @@ class Order(BaseModel):
     foodId:int
     totalNumber:int
     userId: int
+    
     class Config():
         orm_mode = True
         
@@ -141,5 +143,25 @@ class ShowOrder(BaseModel):
     riderId: int = None
     cost: float
     trackingStage: str
+    
+    class Config():
+        orm_mode = True
+        
+class Feedback(BaseModel):
+    foodId: int
+    comment: str
+    stars: int
+    commentedBy: str
+    
+    class Config():
+        orm_mode = True
+        
+class ShowFeedback(BaseModel):
+    foodId: int
+    comment: str
+    stars: int
+    commentedBy: str
+    dateCommented: datetime = None
+    
     class Config():
         orm_mode = True
