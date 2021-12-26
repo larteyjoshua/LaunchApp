@@ -101,3 +101,14 @@ class ShowRider(BaseModel):
 
     class Config():
         orm_mode = True
+    
+class Food(BaseModel):
+    name:str
+    ingredients:str
+    imagePath: str = None
+    price: float
+    dateAdded: datetime
+    addedBy: int = None
+
+    class Config():
+        orm_mode = True
