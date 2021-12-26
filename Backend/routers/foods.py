@@ -15,11 +15,11 @@ get_db = database.get_db
 def create_food(request: schemas.Food, db: Session = Depends(get_db)):
     return foods.create(request, db)
 
-@router.get('/{id}', response_model=schemas.Food)
+@router.get('/{id}', response_model=schemas.ShowFood)
 def get_food(id: int, db: Session = Depends(get_db)):
     return foods.show(id, db)
 
-@router.get('/',  response_model=List[schemas.Food]  )
+@router.get('/',  response_model=List[schemas.ShowFood]  )
 def all(db: Session = Depends(get_db)):
     return foods.get_all(db)
 

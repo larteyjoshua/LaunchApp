@@ -107,8 +107,39 @@ class Food(BaseModel):
     ingredients:str
     imagePath: str = None
     price: float
+    addedBy: int = None
+
+    class Config():
+        orm_mode = True
+
+class ShowFood(BaseModel):
+    name:str
+    ingredients:str
+    imagePath: str = None
+    price: float
     dateAdded: datetime
     addedBy: int = None
 
+    class Config():
+        orm_mode = True
+    
+class Order(BaseModel):
+    foodId:int
+    totalNumber:int
+    userId: int
+    class Config():
+        orm_mode = True
+        
+class ShowOrder(BaseModel):
+    foodId:int
+    totalNumber:int
+    userId: int
+    destination: str
+    isActive: bool 
+    orderDate: datetime
+    trackingStage: str
+    riderId: int = None
+    cost: float
+    trackingStage: str
     class Config():
         orm_mode = True

@@ -11,7 +11,7 @@ def create(request: schemas.User, db: Session):
     if user:
         return{"info": f"User with the email {request.email} already exist"}
     else: 
-        new_user = models.User(fullName=request.fullName, email=request.email, password=Hash.bcrypt(request.password))
+        new_user = models.User(fullName=request.fullName, email=request.email, password=Hash.bcrypt(request.password), companyId =request.companyId)
         db.add(new_user)
         db.commit()
         db.refresh(new_user)

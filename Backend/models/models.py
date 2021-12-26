@@ -1,6 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, TIMESTAMP, text, Float, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, TIMESTAMP, text, Float, Boolean, Enum
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql import func
 from utils.database import Base
 from datetime import datetime
 
@@ -63,17 +62,24 @@ class Food(Base):
     addedBy = Column(Integer, ForeignKey('managers.id'))
     imagePath = Column(String)
     foodowner = relationship("Manager", back_populates="foods")
+    
 
 class Order(Base):
     __tablename__ = 'orders'
     id = Column(Integer, primary_key=True, index=True)
     orderDate = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    foodId = Column(Integer, ForeignKey('foods.id'))
     companyId = Column(Integer, ForeignKey('company.id'))
     cost = Column(Float)
+    totalNumber = Column(Integer)
     riderId = Column(Integer, ForeignKey('riders.id'))
     userId = Column(Integer, ForeignKey('users.id'))
+    destination = Column(String)
+    trackingStage =Column(String)
+    isActive = Column(Boolean(), default=True)
     riderowner = relationship("Rider", back_populates="orders")
     companyowner = relationship("Company", back_populates="orders")
+    foods = relationship("Food", backref="orders")
 
 class Feedback(Base):
     __tablename__ = 'feedback'
@@ -83,6 +89,7 @@ class Feedback(Base):
     stars = Column(Integer)
     dateCommented = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     commentedBy = Column(Integer, ForeignKey('users.id'))
+    foods = relationship("Food", backref="feedback")
 
 
 class Rider(Base):
@@ -107,4 +114,3 @@ class Account(Base):
     modifyBy = Column(Integer, ForeignKey('managers.id'))
     dateModified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     company = relationship("Company", back_populates="account")
-
