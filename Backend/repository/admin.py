@@ -11,7 +11,10 @@ def create(request: schemas.Admin, db: Session):
     if user:
         return{"info": f"Admin with the email {request.email} already exist"}
     else: 
-        new_manager = models.Manager(fullName=request.fullName, email=request.email, password=Hash.bcrypt(request.password))
+        new_manager = models.Manager(fullName=request.fullName,
+                                     email=request.email, 
+                                     password=Hash.bcrypt(request.password),
+                                     roleId = request.roleId)
         db.add(new_manager)
         db.commit()
         db.refresh(new_manager)

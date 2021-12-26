@@ -165,3 +165,22 @@ class ShowFeedback(BaseModel):
     
     class Config():
         orm_mode = True
+        
+class Account(BaseModel):
+    companyId: int
+    totalCost: float
+    amountPaid: float = None
+    balance: float = None
+    modifyBy: int
+    class Config():
+        orm_mode = True
+
+class ShowAccount(BaseModel):
+    companyId: int
+    totalCost: float
+    amountPaid: float = None
+    balance: float = None
+    modifyBy: int
+    dateModified: datetime = None
+    class Config():
+        orm_mode = True
