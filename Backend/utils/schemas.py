@@ -1,6 +1,5 @@
 from typing import List, Optional
 from pydantic import BaseModel
-from models.models import Order
 from datetime import  datetime
 
 class User(BaseModel):
