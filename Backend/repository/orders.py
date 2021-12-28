@@ -68,3 +68,7 @@ def update(id: int, request: schemas.ShowOrder, db: Session):
     db.commit()
     db.refresh(order)
     return order
+
+def get_all_by_user(db: Session, userId):
+    orders = db.query(models.Order).filter(models.Order.userId == userId).all()
+    return orders

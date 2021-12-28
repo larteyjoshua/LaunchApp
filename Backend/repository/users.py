@@ -52,3 +52,21 @@ def update(id: int, request: schemas.ShowUser, db: Session):
     db.commit()
     db.refresh(user)
     return user
+
+def is_active(user: schemas.ShowUser) -> bool:
+        return user.is_active
+
+def is_superuser(user: schemas.ShowUser) -> bool:
+        return user.is_superuser
+    
+def get_by_email(db: Session, request):
+    user = db.query(models.User).filter(
+        models.User.email == request.username).first()
+    return user
+
+def showUser(db: Session, email: str ):
+    user = db.query(models.User).filter(models.User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"User with the id {email} is not available")
+    return user

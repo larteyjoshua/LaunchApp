@@ -49,3 +49,11 @@ def update(id: int, request: schemas.ShowFeedback, db: Session):
     db.commit()
     db.refresh(feedback)
     return feedback
+
+
+def show_by_food(id: int, db: Session):
+    feedbacks = db.query(models.Feedback).filter(models.Feedback.foodId == id).All()
+    if  feedbacks is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Feedbacks not available for for dood with id {id}")
+    return feedbacks

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from models import  models
 from utils.database import SessionLocal, engine
-from routers import users, admin, roles, company, riders, foods, orders, feedbacks, account
+from routers import users, admin, roles, company, riders, foods, orders, feedbacks, account, userLogin, userActivities, superAdminActivities, adminactivities
 from fastapi.middleware.cors import CORSMiddleware
 
 models.Base.metadata.create_all(bind=engine)
@@ -19,7 +19,7 @@ You can **manage the this system**.
 You will be able to:
 
 * **Create users**.
-* ** book launch** .
+* **book launch** .
 """
 app = FastAPI(
     title = "LaunchApp",
@@ -36,7 +36,7 @@ app = FastAPI(
     
 )
 
-origins = [ "*"]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -50,12 +50,17 @@ app.add_middleware(
 async def home():
     return {"message": "Hello World"}
 
-app.include_router(users.router)
-app.include_router(admin.router)
-app.include_router(roles.router)
-app.include_router(company.router)
-app.include_router(riders.router)
-app.include_router(foods.router)
-app.include_router(orders.router)
-app.include_router(feedbacks.router)
-app.include_router(account.router)
+# app.include_router(users.router)
+# app.include_router(admin.router)
+# app.include_router(roles.router)
+# app.include_router(company.router)
+# app.include_router(riders.router)
+# app.include_router(foods.router)
+# app.include_router(orders.router)
+# app.include_router(feedbacks.router)
+# app.include_router(account.router)
+
+app.include_router(userLogin.router)
+app.include_router(userActivities.router)
+app.include_router(adminactivities.router)
+app.include_router(superAdminActivities.router)
