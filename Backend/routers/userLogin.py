@@ -11,7 +11,7 @@ from repository import users
 
 router = APIRouter(tags=['User-Authentication'])
 
-@router.post('/')
+@router.post('user/register')
 async def create_user(request: schemas.User, db: Session = Depends(database.get_db)):
     return users.create(request, db)
 

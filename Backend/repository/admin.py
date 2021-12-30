@@ -56,3 +56,24 @@ def update(id: int, request: schemas.ShowUser, db: Session):
     db.commit()
     db.refresh(admin)
     return admin
+
+
+def is_active(admin: schemas.ShowAdmin) -> bool:
+        return admin.is_active
+
+def is_superuser(admin: schemas.ShowAdmin) -> bool:
+        return admin.is_superuser
+    
+def get_by_email(db: Session, request):
+    admin = db.query(models.Manager).filter(
+        models.Manager.email == request.username).first()
+    return admin
+
+def showAdmin(db: Session, email: str ):
+    #admin = db.query(models.Manager).filter(models.Manager.email == email).first()
+    admin = db.query(models.Manager).join(models.Role).filter(models.Manager.email == email).first()
+    if not admin:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Admin with the id {email} is not available")
+    #role =db.query(models.Role).filter(models.Role.id == admin.roleId).first()
+    return admin

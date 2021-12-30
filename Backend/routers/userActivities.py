@@ -29,7 +29,7 @@ async def create_order(request: schemas.Order, db: Session = Depends(get_db)):
 async def get_user(id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
     return orders.show(id, db)
 
-@router.get('order/all',  response_model=List[schemas.ShowOrder]  )
+@router.get('/order/all',  response_model=List[schemas.ShowOrder]  )
 async def all_by_user(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
     return orders.get_all_by_user(db, current_user.id)
 

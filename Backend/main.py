@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from models import  models
 from utils.database import SessionLocal, engine
-from routers import users, admin, roles, company, riders, foods, orders, feedbacks, account, userLogin, userActivities, superAdminActivities, adminactivities
+from routers import users, admin, roles, company, riders, foods, orders, feedbacks, account,adminLogin, userLogin, userActivities, superAdminActivities, adminactivities
 from fastapi.middleware.cors import CORSMiddleware
 
 models.Base.metadata.create_all(bind=engine)
@@ -62,5 +62,6 @@ async def home():
 
 app.include_router(userLogin.router)
 app.include_router(userActivities.router)
+app.include_router(adminLogin.router)
 app.include_router(adminactivities.router)
 app.include_router(superAdminActivities.router)

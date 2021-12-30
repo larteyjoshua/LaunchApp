@@ -9,12 +9,11 @@ from models import orderstages
 def create(request: schemas.Food, db: Session): 
         food = db.query(models.Food).filter(models.Food.id == request.foodId).first()
         user = db.query(models.User).filter(models.User.id == request.userId).first()
-        
+        print(user.companyId)
         if user.companyId is None:
            return{"info": f"Update your profile with Company"}
         else: 
             company = db.query(models.Company).filter(models.Company.id == user.companyId).first() 
-            print('location', company)
             new_order = models.Order(foodId=request.foodId, 
                                 totalNumber = request.totalNumber,
                                 companyId= user.companyId,
@@ -63,7 +62,6 @@ def update(id: int, request: schemas.ShowOrder, db: Session):
     order.cost = (request.totalNumber * food.price)
     order.userId = request.userId
     order.riderId = request.riderId
-    order.isActive = request.isActive
     order.trackingStage = request.trackingStage
     db.commit()
     db.refresh(order)

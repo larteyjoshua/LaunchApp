@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from models import  models
 from sqlalchemy.orm import Session
-from utils import database, schemas, oauth2
+from utils import database, schemas,adminOauth2
 from repository import admin, company, roles, users, riders, foods, account, orders, feedbacks
 from typing import List
 
@@ -30,20 +30,20 @@ async def update(id: int, request: schemas.ShowAdmin, db: Session = Depends(get_
 
 
 #Company
-@router.post('company/')
+@router.post('/company/')
 async def create_company(request: schemas.Company, db: Session = Depends(get_db)):
     return company.create(request, db)
 
-@router.get('company/{id}', response_model=schemas.ShowCompany)
+@router.get('/company/{id}', response_model=schemas.ShowCompany)
 async def get_company(id: int, db: Session = Depends(get_db)):
     return company.show(id, db)
 
-@router.get('company/',  response_model=List[schemas.ShowCompany])
+@router.get('/company/',  response_model=List[schemas.ShowCompany])
 async def all(db: Session = Depends(get_db)):
     return company.get_all(db)
 
 
-@router.put('company/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowCompany)
+@router.put('/company/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowCompany)
 async def update(id: int, request: schemas.Company, db: Session = Depends(get_db)):
     return company.update(id, request, db)
 
@@ -120,20 +120,20 @@ async def update(id: int, request: schemas.Food, db: Session = Depends(get_db)):
 
 #Accounting
 
-@router.post('account/')
+@router.post('/account/')
 async  def create_account(request: schemas.Account, db: Session = Depends(get_db)):
     return account.create(request, db)
 
-@router.get('account/{id}', response_model=schemas.ShowAccount)
+@router.get('/account/{id}', response_model=schemas.ShowAccount)
 async  def get_account(id: int, db: Session = Depends(get_db)):
     return account.show(id, db)
 
-@router.get('account/',  response_model=List[schemas.ShowAccount]  )
+@router.get('/account/',  response_model=List[schemas.ShowAccount]  )
 async  def all(db: Session = Depends(get_db)):
     return account.get_all(db)
 
 
-@router.put('account/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowAccount)
+@router.put('/account/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowAccount)
 async  def update(id: int, request: schemas.ShowAccount, db: Session = Depends(get_db)):
     return account.update(id, request, db)
 

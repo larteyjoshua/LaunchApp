@@ -3,7 +3,6 @@ from fastapi import HTTPException, status
 from utils.hashing import Hash
 from models import models
 from utils import schemas
-from fastapi.encoders import jsonable_encoder
 
 
 def create(request: schemas.Role, db: Session):
@@ -36,7 +35,8 @@ def destroy(id: int, db: Session):
                             detail=f"User with id {id} not found")
     role.delete(synchronize_session=False)
     db.commit()
-    return 'done'
+    return{"success": f"Role with the name {role.name} created"}
+
 
 def update(id: int, request: schemas.ShowUser, db: Session):
     role = db.query(models.Role).filter(models.Role.id == id).first()

@@ -1,5 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, TIMESTAMP, text, Float, Boolean, Enum
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, TIMESTAMP, Float, Boolean, Text
+from sqlalchemy.orm import relationship, UniqueConstraint
 from utils.database import Base
 from datetime import datetime
 
@@ -12,8 +12,8 @@ class Company(Base):
     isActive = Column(Boolean(), default=True)
     phoneNumber = Column(String)
     dateAdded = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-    addedBy = Column(Integer, ForeignKey('managers.id'))
-    manager = relationship("Manager", back_populates="companies")
+    addedBy = Column(Integer, ForeignKey('users.id'))
+    manager = relationship("User", back_populates="company")
     users = relationship("User", back_populates="company")
     orders = relationship("Order")
     account = relationship("Account", uselist=False, back_populates="company")
@@ -22,35 +22,51 @@ class Role(Base):
     __tablename__ = 'roles'
     id = Column(Integer, primary_key =True, index = True)
     name = Column(String)
+    description = Column(Text)
     dateAdded = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+
+# class User(Base):
+#     __tablename__ = 'users'
+#     id = Column(Integer, primary_key=True, index=True)
+#     fullName = Column(String)   
+#     email = Column(String, unique=True, index=True)
+#     password = Column(String)
+#     date = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+#     is_active = Column(Boolean(), default=True)
+#     companyId =  Column(Integer, ForeignKey('company.id'))
+#     company = relationship("Company", back_populates="users")
+#     orders = relationship("Order")
+#     feedbacks = relationship("Feedback")
+
+class UserRole(Base):
+    __tablename__ = "user_roles" 
+    user_id = Column(Integer,ForeignKey("users.id"), primary_key=True, nullable=False, index = True)
+    role_id = Column(Integer, ForeignKey("roles.id"), primary_key=True,nullable=False, Index =  True)
+    role = relationship("Role")
+    user = relationship("User", back_populates="user_role", uselist=False)
+
+    __table_args__ = (
+        UniqueConstraint("user_id", "role_id", name="unique_user_role"),
+    )
 
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, index=True)
-    fullName = Column(String)   
-    email = Column(String, unique=True, index=True)
-    password = Column(String)
-    date = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-    is_active = Column(Boolean(), default=True)
-    companyId =  Column(Integer, ForeignKey('company.id'))
-    company = relationship("Company", back_populates="users")
-    orders = relationship("Order")
-    feedbacks = relationship("Feedback")
-
-class Manager(Base):
-    __tablename__ = 'managers'
-    id = Column(Integer, primary_key=True, index=True)
     fullName = Column(String)
     email = Column(String, unique=True, index=True)
     password = Column(String)
-    date = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    dateCreated = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     isActive = Column(Boolean(), default=True)
     isSuper = Column(Boolean(), default=False)
     roleId =  Column(Integer, ForeignKey('roles.id'))
-    companies = relationship("Company")
+    companyId =  Column(Integer, ForeignKey('company.id'))
+    company = relationship("Company", back_populates="users")
     foods = relationship("Food", back_populates="foodowner")
-    roles = relationship("Role", backref="managers")
+    roles = relationship("Role", backref="users")
     riders = relationship("Rider")
+    orders = relationship("Order")
+    feedbacks = relationship("Feedback")
+    user_role = relationship("UserRole", back_populates="user", uselist=False)
 
 class Food(Base):
     __tablename__ = 'foods'
@@ -59,9 +75,9 @@ class Food(Base):
     ingredients = Column(String)
     dateAdded = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     price = Column(Float)
-    addedBy = Column(Integer, ForeignKey('managers.id'))
+    addedBy = Column(Integer, ForeignKey('users.id'))
     imagePath = Column(String)
-    foodowner = relationship("Manager", back_populates="foods")
+    foodowner = relationship("User", back_populates="foods")
     
 
 class Order(Base):
@@ -76,13 +92,12 @@ class Order(Base):
     userId = Column(Integer, ForeignKey('users.id'))
     destination = Column(String)
     trackingStage =Column(String)
-    isActive = Column(Boolean(), default=True)
     riderowner = relationship("Rider", back_populates="orders")
     companyowner = relationship("Company", back_populates="orders")
     foods = relationship("Food", backref="orders")
 
 class Feedback(Base):
-    __tablename__ = 'feedback'
+    __tablename__ = 'feedbacks'
     id = Column(Integer, primary_key =True, index = True)
     foodId = Column(Integer, ForeignKey('foods.id'))
     comment = Column(String)
@@ -100,9 +115,9 @@ class Rider(Base):
     motorNumber = Column(String)
     tellNumber = Column(String)
     dateAdded = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-    addedBy = Column(Integer, ForeignKey('managers.id'))
+    addedBy = Column(Integer, ForeignKey('users.id'))
     orders = relationship("Order", back_populates="riderowner")
-    manager = relationship("Manager", back_populates="riders")
+    manager = relationship("User", back_populates="riders")
 
 class Account(Base):
     __tablename__ = 'accounts'
@@ -111,6 +126,7 @@ class Account(Base):
     totalCost = Column(Float)
     amountPaid = Column(Float)
     balance = Column(Float)
-    modifyBy = Column(Integer, ForeignKey('managers.id'))
+    modifyBy = Column(Integer, ForeignKey('users.id'))
     dateModified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     company = relationship("Company", back_populates="account")
+    foods = relationship("User", backref="accounts")

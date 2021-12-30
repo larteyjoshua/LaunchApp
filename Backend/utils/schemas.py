@@ -34,9 +34,7 @@ class ShowAdmin(BaseModel):
     
     class Config():
         orm_mode = True
-        
-        
-        
+           
 class Admin(BaseModel):
     fullName:str
     email:str
@@ -132,6 +130,7 @@ class Order(BaseModel):
         orm_mode = True
         
 class ShowOrder(BaseModel):
+    id: int
     foodId:int
     totalNumber:int
     userId: int
