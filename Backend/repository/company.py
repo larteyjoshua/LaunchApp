@@ -13,9 +13,10 @@ def create(request: schemas.Company, db: Session):
     else: 
         new_company = models.Company(name=request.name,
                                      email=request.email,
-                                     addedBy = request.addedBy, 
+                                    phoneNumber = request.phoneNumber,
                                      location=request.location,
-                                     phoneNumber = request.phoneNumber)
+                                     addedBy = request.addedBy 
+                                    )
         db.add(new_company)
         db.commit()
         db.refresh(new_company)

@@ -1,8 +1,12 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, TIMESTAMP, Float, Boolean, Text
-from sqlalchemy.orm import relationship, UniqueConstraint
+from sqlalchemy import Column, Table,Integer, String, ForeignKey, DateTime, TIMESTAMP, Float, Boolean, Text, UniqueConstraint
+from sqlalchemy.orm import relationship
 from utils.database import Base
 from datetime import datetime
 
+association_table = Table('association', Base.metadata,
+    Column('company_id', ForeignKey('company.id'), primary_key=True),
+    Column('user_id', ForeignKey('users.id'), primary_key=True)
+)
 class Company(Base):
     __tablename__ = 'company'
     id = Column(Integer, primary_key=True, index=True)
@@ -13,8 +17,10 @@ class Company(Base):
     phoneNumber = Column(String)
     dateAdded = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     addedBy = Column(Integer, ForeignKey('users.id'))
-    manager = relationship("User", back_populates="company")
-    users = relationship("User", back_populates="company")
+    users =relationship(
+        "User",
+        secondary=association_table,
+        back_populates="company")
     orders = relationship("Order")
     account = relationship("Account", uselist=False, back_populates="company")
 
@@ -41,7 +47,7 @@ class Role(Base):
 class UserRole(Base):
     __tablename__ = "user_roles" 
     user_id = Column(Integer,ForeignKey("users.id"), primary_key=True, nullable=False, index = True)
-    role_id = Column(Integer, ForeignKey("roles.id"), primary_key=True,nullable=False, Index =  True)
+    role_id = Column(Integer, ForeignKey("roles.id"), primary_key=True,nullable=False, index =  True)
     role = relationship("Role")
     user = relationship("User", back_populates="user_role", uselist=False)
 
@@ -57,17 +63,17 @@ class User(Base):
     password = Column(String)
     dateCreated = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     isActive = Column(Boolean(), default=True)
-    isSuper = Column(Boolean(), default=False)
-    roleId =  Column(Integer, ForeignKey('roles.id'))
     companyId =  Column(Integer, ForeignKey('company.id'))
-    company = relationship("Company", back_populates="users")
+    company =  relationship(
+        "Company",
+        secondary=association_table,
+        back_populates="users")
     foods = relationship("Food", back_populates="foodowner")
-    roles = relationship("Role", backref="users")
     riders = relationship("Rider")
     orders = relationship("Order")
     feedbacks = relationship("Feedback")
     user_role = relationship("UserRole", back_populates="user", uselist=False)
-
+    
 class Food(Base):
     __tablename__ = 'foods'
     id = Column(Integer, primary_key=True, index=True)

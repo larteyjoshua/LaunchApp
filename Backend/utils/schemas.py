@@ -17,7 +17,7 @@ class ShowUser(BaseModel):
     email:str
     password: str
     companyId: Optional[int] = None
-    is_active: bool
+    isActive: bool
     
     class Config():
         orm_mode = True
@@ -30,7 +30,6 @@ class ShowAdmin(BaseModel):
     password: str
     roleId: Optional[int] = None
     isActive: bool
-    isSuper: bool
     
     class Config():
         orm_mode = True
@@ -39,13 +38,13 @@ class Admin(BaseModel):
     fullName:str
     email:str
     password: str
-    roleId: Optional[int] = None
 
     class Config():
         orm_mode = True        
 
 class Role(BaseModel):
     name: str
+    description: str
     class Config():
         orm_mode = True 
         
@@ -124,7 +123,6 @@ class ShowFood(BaseModel):
 class Order(BaseModel):
     foodId:int
     totalNumber:int
-    userId: int
     
     class Config():
         orm_mode = True
@@ -135,7 +133,6 @@ class ShowOrder(BaseModel):
     totalNumber:int
     userId: int
     destination: str
-    isActive: bool 
     orderDate: datetime
     trackingStage: str
     riderId: int = None
@@ -195,3 +192,7 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+    
+class UserRoleBase(BaseModel):
+    user_id: Optional[int] = None
+    role_id: Optional[int] = None

@@ -1,26 +1,22 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
-from utils.hashing import Hash
 from models import models
 from utils import schemas
-from models import orderstages
 
 
-def create(request: schemas.Food, db: Session): 
+def create(request: schemas.Food, db: Session, current_user): 
         food = db.query(models.Food).filter(models.Food.id == request.foodId).first()
-        user = db.query(models.User).filter(models.User.id == request.userId).first()
-        print(user.companyId)
-        if user.companyId is None:
+        if current_user.companyId is None:
            return{"info": f"Update your profile with Company"}
         else: 
-            company = db.query(models.Company).filter(models.Company.id == user.companyId).first() 
+            company = db.query(models.Company).filter(models.Company.id == current_user.companyId).first() 
             new_order = models.Order(foodId=request.foodId, 
                                 totalNumber = request.totalNumber,
-                                companyId= user.companyId,
+                                companyId= current_user.companyId,
                                 cost = (request.totalNumber * food.price),
-                                userId = request.userId,
+                                userId = current_user.id,
                                 destination = company.location,
-                                trackingStage = 'comfirm'
+                                trackingStage = 'pending confirmation'
                             )
             db.add(new_order)
             db.commit()
@@ -67,6 +63,7 @@ def update(id: int, request: schemas.ShowOrder, db: Session):
     db.refresh(order)
     return order
 
-def get_all_by_user(db: Session, userId):
-    orders = db.query(models.Order).filter(models.Order.userId == userId).all()
+def get_all_by_user(db: Session, current_user):
+    print(current_user.id)
+    orders = db.query(models.Order).filter(models.Order.userId == current_user.id).all()
     return orders

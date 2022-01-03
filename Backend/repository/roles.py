@@ -10,7 +10,7 @@ def create(request: schemas.Role, db: Session):
     if role:
         return{"info": f"Role with the name {request.name} already exist"}
     else: 
-        new_role = models.Role(name=request.name)
+        new_role = models.Role(name=request.name, description = request.description)
         db.add(new_role)
         db.commit()
         db.refresh(new_role)
@@ -45,6 +45,14 @@ def update(id: int, request: schemas.ShowUser, db: Session):
                             detail=f"Role with id {id} not found")
      
     role.name = request.name
+    role.description = request.description
     db.commit()
     db.refresh(role)
+    return role
+
+def role_by_name(name: str, db: Session):
+    role = db.query(models.Role).filter(models.Role.name == name).first()
+    if not role:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Role with the id {name} is not available")
     return role

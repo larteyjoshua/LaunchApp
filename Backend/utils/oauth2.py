@@ -1,18 +1,34 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Security
 from fastapi.security import OAuth2PasswordBearer
 from utils import token
 from sqlalchemy.orm import Session
 from utils import database
+from utils.userRoles import Role
+from fastapi.security import SecurityScopes
+from repository import users
 
 get_db = database.get_db
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login", 
+                                      scopes={
+        Role.USER["name"]: Role.USER["description"],
+        Role.ORDER_MANAGER["name"]: Role.ORDER_MANAGER["description"],
+        Role.ACCOUNT_MANAGER["name"]: Role.ACCOUNT_MANAGER["description"],
+        Role.ADMIN["name"]: Role.ADMIN["description"],
+        Role.SUPER_ADMIN["name"]: Role.SUPER_ADMIN["description"],
+        Role.COOK["name"]: Role.COOK["description"],
+    },
+                                      )
 
 
-def get_current_user(data: str = Depends(oauth2_scheme),  db: Session = Depends(get_db)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-    )
+def get_current_user( security_scopes: SecurityScopes,
+                     data: str = Depends(oauth2_scheme),
+                     db: Session = Depends(get_db)):
+    
+    return token.verify_token(data, db, security_scopes,)
 
-    return token.verify_token(credentials_exception, data, db)
+def get_current_active_user(
+    current_user = Security(get_current_user, scopes=[],)):
+    if not users.is_active(current_user):
+        raise HTTPException(status_code=400, detail="Inactive user")
+    return current_user

@@ -3,13 +3,16 @@ from fastapi import HTTPException, status
 from utils.hashing import Hash
 from models import models
 from utils import schemas
-from fastapi.encoders import jsonable_encoder
+
 
 
 def create(request: schemas.User, db: Session):
     user = db.query(models.User).filter(models.User.email == request.email).first()
+    company = db.query(models.Company).filter(models.Company.id ==request.companyId).first()
     if user:
         return{"info": f"User with the email {request.email} already exist"}
+    elif not company:
+         return{"info": f"Company with the id {request.companyId} does not exist"}
     else: 
         new_user = models.User(fullName=request.fullName, email=request.email, password=Hash.bcrypt(request.password), companyId =request.companyId)
         db.add(new_user)
@@ -48,25 +51,39 @@ def update(id: int, request: schemas.ShowUser, db: Session):
     user.email = request.email
     user.fullName = request.fullName
     user.companyId = request.companyId
-    user.is_active = request.is_active
+    user.isActive = request.isActive
     db.commit()
     db.refresh(user)
     return user
 
 def is_active(user: schemas.ShowUser) -> bool:
-        return user.is_active
+        return user.isActive
 
 def is_superuser(user: schemas.ShowUser) -> bool:
         return user.is_superuser
     
 def get_by_email(db: Session, request):
-    user = db.query(models.User).filter(
-        models.User.email == request.username).first()
+    user = db.query(models.User).filter(models.User.email ==request).first()
     return user
+
+def authenticate( db: Session ,request):
+        user = get_by_email(db, request.username)
+        if not user:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Invalid Credentials")
+        elif not Hash.verify(user.password, request.password):
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Incorrect password")
+        return user
 
 def showUser(db: Session, email: str ):
     user = db.query(models.User).filter(models.User.email == email).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"User with the id {email} is not available")
+    return user
+
+def get_by_name(fullName: str, db: Session):
+    user = db.query(models.User).filter(
+        models.User.fullName ==fullName).first()
     return user

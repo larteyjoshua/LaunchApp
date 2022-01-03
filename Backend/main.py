@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from models import  models
-from utils.database import SessionLocal, engine
-from routers import users, admin, roles, company, riders, foods, orders, feedbacks, account,adminLogin, userLogin, userActivities, superAdminActivities, adminactivities
+from utils.database import engine
+from routers import userLogin, userActivities, superAdminActivities, adminactivities
 from fastapi.middleware.cors import CORSMiddleware
+from utils.config import settings
+from routers.basicRouters import users, admin, roles, company, riders, foods, orders, feedbacks, account 
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -22,7 +24,7 @@ You will be able to:
 * **book launch** .
 """
 app = FastAPI(
-    title = "LaunchApp",
+    title = settings.PROJECT_NAME,
     description = description,
     contact={
         "name": "Joshua Lartey",
@@ -50,6 +52,10 @@ app.add_middleware(
 async def home():
     return {"message": "Hello World"}
 
+@app.get("/")
+async def home():
+    return {"message": "Hello World"}
+
 # app.include_router(users.router)
 # app.include_router(admin.router)
 # app.include_router(roles.router)
@@ -62,6 +68,5 @@ async def home():
 
 app.include_router(userLogin.router)
 app.include_router(userActivities.router)
-app.include_router(adminLogin.router)
 app.include_router(adminactivities.router)
 app.include_router(superAdminActivities.router)
