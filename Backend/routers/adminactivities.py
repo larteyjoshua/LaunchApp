@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends, status, Security
+from fastapi import APIRouter, Depends, status, Security, UploadFile, Form, File
 from models import  models
 from sqlalchemy.orm import Session
 from utils import database, schemas, oauth2
 from repository import admin, company, roles, users, riders, foods, account, orders, feedbacks, user_role
 from typing import List
 from utils.userRoles import Role
-
+from utils.uploadHelper import handle_file_upload
 router = APIRouter(
     prefix = '/admin'
     
@@ -120,7 +120,7 @@ async def get_userRole(id: int, db: Session = Depends(get_db), current_user: sch
     )):
     return user_role.show(id, db)
 
-@router.get('/userRoles/', tags = ['Admins', 'Super Admin'] )
+@router.get('/userRole/', tags = ['Admins', 'Super Admin'] )
 async def all(db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]],
@@ -192,33 +192,47 @@ async def update(id: int, request: schemas.Rider, db: Session = Depends(get_db),
 #Foods
 
 @router.post('/food/', tags = ['Admins', 'Super Admin' ])
-async def create_food(request: schemas.Food, db: Session = Depends(get_db), current_user: schemas.User = Security(
+async def create_food(name: str= Form(...),
+           ingredients: str = Form(...),
+            price: float = Form(...),
+            imagePath:  UploadFile = File(...),
+            db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
-        scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]],
+        scopes=[Role.SUPER_ADMIN["name"], Role.ADMIN["name"]],
     )):
-    return foods.create(request, db)
+    
+    food = schemas.Food(name = name, ingredients =ingredients, price = price, addedBy =current_user.id)
+    food.imagePath = await handle_file_upload(imagePath, name)
+    return foods.create(food, db)
 
-@router.get('/food/{id}', response_model=schemas.ShowFood,  tags = ['Admins', 'Cook', 'Super Admin' ])
+@router.get('/food/{id}', response_model=schemas.ShowFood,  tags = ['Admins', 'Cook', 'Super Admin', 'Users'])
 async def get_food(id: int, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
-        scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"], Role.COOK["name"]],
+        scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"], Role.COOK["name"], Role.USER["name"]],
     )):
     return foods.show(id, db)
 
-@router.get('/food/',  response_model=List[schemas.ShowFood],  tags = ['Admins', 'Cook', 'Super Admin' ]  )
+@router.get('/food/',  response_model=List[schemas.ShowFood],  tags = ['Admins', 'Cook', 'Super Admin', 'Users' ]  )
 async def all(db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
-        scopes=[Role.SUPER_ADMIN["name"], Role.ADMIN["name"], Role.COOK["name"]],
+        scopes=[Role.SUPER_ADMIN["name"], Role.ADMIN["name"], Role.COOK["name"], Role.USER["name"]],
     )):
     return foods.get_all(db)
 
 
-@router.put('/food/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.Food,  tags = ['Admins', 'Super Admin' ])
-async def update(id: int, request: schemas.Food, db: Session = Depends(get_db), current_user: schemas.User = Security(
+@router.put('/food/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.Food,  tags = ['Admins', 'Super Admin'])
+async def update(id: int, name: str= Form(...),
+           ingredients: str = Form(...),
+            price: float = Form(...),
+            imagePath:  UploadFile = File(...),
+            db: Session = Depends(get_db), 
+            current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"], Role.ADMIN["name"]],
     )):
-    return foods.update(id, request, db)
+    food = schemas.Food(name = name, ingredients =ingredients, price = price, addedBy =current_user.id)
+    food.imagePath = await handle_file_upload(imagePath, name)
+    return foods.update(id, food, db)
 
 #Accounting
 

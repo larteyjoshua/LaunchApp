@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from utils.hashing import Hash
@@ -26,8 +27,15 @@ def show(id: int, db: Session):
     return admin
 
 def get_all(db: Session):
-    admins = db.query(models.User).all()
-    print("admin", admins)
+    # admins =db.query(
+    # models.User, 
+    # models.UserRole, 
+    # models.Role).filter(
+    # models.User.id ==  models.UserRole.user_id).filter(
+    # models.UserRole.role_id == models.Role.id).filter(models.Role.name == "ADMIN").all()
+    admins = db.query(models.User).join(models.UserRole, models.User.id == models.UserRole.user_id).all()
+    #roles = db.query(models.Role, models.UserRole).all()
+
     return admins
 
 def destroy(id: int, db: Session):

@@ -29,7 +29,7 @@ def show(id: int, db: Session):
     return user
 
 def get_all(db: Session):
-    users = db.query(models.User).all()
+    users = db.query(models.User).filter(models.User.companyId != None).all()
     return users
 
 def destroy(id: int, db: Session):

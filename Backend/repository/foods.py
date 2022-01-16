@@ -4,6 +4,8 @@ from utils.hashing import Hash
 from models import models
 from utils import schemas
 from fastapi.encoders import jsonable_encoder
+from utils.s3BucketHelpers import delete_file_from_s3, create_presigned_url
+from utils.config import settings
 
 
 def create(request: schemas.Food, db: Session):
@@ -27,10 +29,15 @@ def show(id: int, db: Session):
     if not food:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Food with the id {id} is not available")
+     
+    food.imagePath = create_presigned_url(settings.BUCKET_NAME, food.imagePath)
     return food
 
 def get_all(db: Session):
     foods = db.query(models.Food).all()
+    url_list = []
+    for food in foods:
+        food.imagePath= create_presigned_url(settings.BUCKET_NAME, food.imagePath)
     return foods
 
 def destroy(id: int, db: Session):
@@ -38,6 +45,7 @@ def destroy(id: int, db: Session):
     if not food.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Food with id {id} not found")
+    delete_file_from_s3(settings.BUCKET_NAME,food.name)
     food.delete(synchronize_session=False)
     db.commit()
     return 'done'

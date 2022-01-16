@@ -24,12 +24,14 @@ class ShowUser(BaseModel):
 
 
 class ShowAdmin(BaseModel):
-    id: int
-    fullName:str
-    email:str
-    password: str
-    roleId: Optional[int] = None
-    isActive: bool
+    id: int = None
+    fullName:str = None
+    email:str = None
+    password: str = None
+    isActive: bool =None
+    name:  Optional[str] = None
+    role_id: Optional[int] = None
+  
     
     class Config():
         orm_mode = True
@@ -116,6 +118,7 @@ class ShowFood(BaseModel):
     price: float
     dateAdded: datetime
     addedBy: int = None
+
 
     class Config():
         orm_mode = True
