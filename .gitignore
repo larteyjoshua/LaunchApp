@@ -3,4 +3,4 @@
 __pycache__/
 /Backend/alembic.ini
 .env
-/Backend/config.py
+/Backend/utils/config.py
