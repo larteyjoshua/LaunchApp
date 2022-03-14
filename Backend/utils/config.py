@@ -11,21 +11,21 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str =  secrets.token_urlsafe(32)
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
-    ALGORITHM:str = "HS256"
+    ALGORITHM:str = 
     USERS_OPEN_REGISTRATION: Optional[int] = None
     ALLOWED_EXTENSIONS = ('png', 'jpg', 'jpeg') 
     ENVIRONMENT: Optional[str]
-    SERVER_HOST: str = 'http://localhost:8080'
+    SERVER_HOST: str = 
 
-    FIRST_SUPER_ADMIN_EMAIL: str = "superuser@lunchapp.com"
+    FIRST_SUPER_ADMIN_EMAIL: str = 
     FIRST_SUPER_ADMIN_PASSWORD: str  = ""
     
-    AWS_ACCESS_KEY_ID: str='AKIAXZDSGWIS3LUAISGN'
-    AWS_SECRET_ACCESS_KEY="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"
+    AWS_ACCESS_KEY_ID: str=
+    AWS_SECRET_ACCESS_KEY=
     REGION_NAME: str = 'us-east-2'
     SIGNATURE_VERSION: str='s3v4'
     BUCKET_NAME: str ="lunchapp-images"
-    SENDGRID_API_KEY: str= "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"
+    SENDGRID_API_KEY: str= 
 
     SQLALCHEMY_DATABASE_URI: str = "postgresql://postgres:12345678@localhost:5432/launchapp"
     
