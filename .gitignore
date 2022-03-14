@@ -2,5 +2,4 @@
 /Backend/Backend.iml
 __pycache__/
 /Backend/alembic.ini
-.env
-/Backend/utils/config.py
+/Backend/.env

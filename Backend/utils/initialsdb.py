@@ -28,7 +28,7 @@ def databaseinit(db: Session) -> None:
         super_admin_role = schemas.Role(name=Role.SUPER_ADMIN["name"],description=Role.SUPER_ADMIN["description"])
         roles.create(super_admin_role, db)
    
-        
+        ## Creating SuperAdmin
         super_admin_ = schemas.User(fullName=User.SUPER_ADMIN["fullName"],email=User.SUPER_ADMIN["email"], password=User.SUPER_ADMIN["password"])
         admin.create(super_admin_, db)
         
