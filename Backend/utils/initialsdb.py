@@ -2,7 +2,7 @@
 from utils.config import settings
 from sqlalchemy.orm import Session
 from utils import schemas
-from repository import roles, users, user_role
+from repository import roles, admin, user_role, users
 from utils.userRoles import Role
 from utils.commonUsers import User
 
@@ -30,7 +30,7 @@ def databaseinit(db: Session) -> None:
    
         
         super_admin_ = schemas.User(fullName=User.SUPER_ADMIN["fullName"],email=User.SUPER_ADMIN["email"], password=User.SUPER_ADMIN["password"])
-        users.create(super_admin_, db)
+        admin.create(super_admin_, db)
         
     # # Assign super_admin role to user
         role = roles.role_by_name(Role.SUPER_ADMIN["name"], db )

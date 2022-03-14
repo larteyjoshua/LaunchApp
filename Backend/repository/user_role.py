@@ -1,5 +1,5 @@
 
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, BackgroundTasks
 from models import  models
 from utils import schemas
 from sqlalchemy.orm import Session
@@ -25,13 +25,13 @@ def get_all(db: Session):
     return roles
 
 def destroy(id: int, db: Session):
-    role = db.query(models.UserRole).filter(models.UserRole.id == id)
+    role = db.query(models.UserRole).filter(models.UserRole.role_id == id)
     if not role.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"User Role with id {id} not found")
     role.delete(synchronize_session=False)
     db.commit()
-    return{"success": f"Role with the name {role.id} created"}
+    return{"success": f"Role with the name {role.role_id} created"}
 
 
 def update(id: int, request: schemas.UserRoleBase, db: Session):

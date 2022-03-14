@@ -18,7 +18,7 @@ get_db = database.get_db
 async def update(id: int, request: schemas.ShowUser, db: Session = Depends(get_db), 
                  current_user: schemas.User = Security(
         oauth2.get_current_active_user,
-        scopes=[Role.USER["name"]],
+        scopes=[Role.USER["name"],],
     )):
     return users.update(id, request, db)
 
@@ -48,9 +48,8 @@ async def get_user(id: int, db: Session = Depends(get_db), current_user: schemas
 @router.get('/orders/all', response_model=List[schemas.ShowOrder])
 async def all_by_user(db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
-        scopes=[Role.USER["name"]],
+        scopes=[Role.USER["name"],  Role.ADMIN["name"]],
     )):
-    print(current_user.id)
     return orders.get_all_by_user(db, current_user)
 
 @router.put('/order/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowOrder, )

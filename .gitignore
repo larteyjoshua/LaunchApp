@@ -1,5 +1,6 @@
  /Backend/.idea/.
 /Backend/Backend.iml
 __pycache__/
-
-
+/Backend/alembic.ini
+.env
+/Backend/config.py

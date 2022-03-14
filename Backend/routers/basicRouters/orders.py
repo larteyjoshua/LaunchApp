@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, status
-from models import  models
 from sqlalchemy.orm import Session
 from utils import database, schemas
 from repository import orders
@@ -31,3 +30,7 @@ async def update(id: int, request: schemas.ShowOrder, db: Session = Depends(get_
 @router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
 async def destroy(id: int, db: Session = Depends(get_db)):
     return orders.destroy(id, db)
+
+@router.get('/',  response_model=List[schemas.ShowOrder]  )
+async def all_by_user(db: Session = Depends(get_db)):
+    return orders.get_all(db)

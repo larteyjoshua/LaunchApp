@@ -16,11 +16,11 @@ async def handle_file_upload(file, fileName: str):
     
     elif file and allowed_file(file.filename):
             file_name = secure_filename(file.filename)
-            file_path = '{}/{}'.format( fileName, file_name)
+            # file_path = '{}/{}'.format( fileName, file_name)
             im = Image.open(file.file, mode='r')
             width, height = im.size
             draw = ImageDraw.Draw(im)
-            text = "LaunchApp"
+            text = "LunchApp"
             font = ImageFont.truetype('arial.ttf', 36)
             textwidth, textheight = draw.textsize(text, font)
 
@@ -39,5 +39,5 @@ async def handle_file_upload(file, fileName: str):
             # create a django-friendly Files object
             new_file = im_io.getvalue()
 
-            upload_file_to_s3(file_path,  BytesIO(new_file), settings.BUCKET_NAME)
+            upload_file_to_s3(file_name,  BytesIO(new_file), settings.BUCKET_NAME)
             return file_name

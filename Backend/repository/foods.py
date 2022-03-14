@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, BackgroundTasks
 from utils.hashing import Hash
 from models import models
 from utils import schemas
@@ -41,12 +41,14 @@ def get_all(db: Session):
     return foods
 
 def destroy(id: int, db: Session):
-    food = db.query(models.Food).filter(models.Food.id == id)
-    if not food.first():
+    food = db.query(models.Food).filter(models.Food.id == id).first()
+    if not food:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Food with id {id} not found")
-    delete_file_from_s3(settings.BUCKET_NAME,food.name)
-    food.delete(synchronize_session=False)
+    print(food.imagePath)
+    delete_file_from_s3(settings.BUCKET_NAME,food.imagePath)
+    db.delete(food)
+    #food.delete(synchronize_session=False)
     db.commit()
     return 'done'
 

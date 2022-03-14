@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from utils.config import settings
 from routers.basicRouters import users, admin, roles, company, riders, foods, orders, feedbacks, account 
 
-models.Base.metadata.create_all(bind=engine)
+#models.Base.metadata.create_all(bind=engine)
 
 description = """
 LaunchApp API helps you to booked your launch from a service provider and 

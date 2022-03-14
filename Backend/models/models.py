@@ -7,6 +7,7 @@ association_table = Table('association', Base.metadata,
     Column('company_id', ForeignKey('company.id'), primary_key=True),
     Column('user_id', ForeignKey('users.id'), primary_key=True)
 )
+
 class Company(Base):
     __tablename__ = 'company'
     id = Column(Integer, primary_key=True, index=True)
@@ -17,10 +18,8 @@ class Company(Base):
     phoneNumber = Column(String)
     dateAdded = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     addedBy = Column(Integer, ForeignKey('users.id'))
-    users =relationship(
-        "User",
-        secondary=association_table,
-        back_populates="company")
+    users =relationship("User",secondary=association_table,back_populates="company",
+                        )
     orders = relationship("Order")
     account = relationship("Account", uselist=False, back_populates="company")
 
@@ -31,18 +30,6 @@ class Role(Base):
     description = Column(Text)
     dateAdded = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
-# class User(Base):
-#     __tablename__ = 'users'
-#     id = Column(Integer, primary_key=True, index=True)
-#     fullName = Column(String)   
-#     email = Column(String, unique=True, index=True)
-#     password = Column(String)
-#     date = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-#     is_active = Column(Boolean(), default=True)
-#     companyId =  Column(Integer, ForeignKey('company.id'))
-#     company = relationship("Company", back_populates="users")
-#     orders = relationship("Order")
-#     feedbacks = relationship("Feedback")
 
 class UserRole(Base):
     __tablename__ = "user_roles" 
@@ -67,11 +54,7 @@ class User(Base):
     company =  relationship(
         "Company",
         secondary=association_table,
-        back_populates="users")
-    foods = relationship("Food", back_populates="foodowner")
-    riders = relationship("Rider")
-    orders = relationship("Order")
-    feedbacks = relationship("Feedback")
+        back_populates="users", primaryjoin= companyId == Company.id, post_update=True)
     user_role = relationship("UserRole", back_populates="user", uselist=False)
     
 class Food(Base):
@@ -83,7 +66,7 @@ class Food(Base):
     price = Column(Float)
     addedBy = Column(Integer, ForeignKey('users.id'))
     imagePath = Column(String)
-    foodowner = relationship("User", back_populates="foods")
+    add_by = relationship('User',  primaryjoin = addedBy == User.id, post_update= True)
     
 
 class Order(Base):
@@ -101,6 +84,7 @@ class Order(Base):
     riderowner = relationship("Rider", back_populates="orders")
     companyowner = relationship("Company", back_populates="orders")
     foods = relationship("Food", backref="orders")
+    belongTo = relationship('User',  primaryjoin = userId == User.id, post_update= True)
 
 class Feedback(Base):
     __tablename__ = 'feedbacks'
@@ -111,6 +95,7 @@ class Feedback(Base):
     dateCommented = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     commentedBy = Column(Integer, ForeignKey('users.id'))
     foods = relationship("Food", backref="feedback")
+    comment_by =relationship("User", primaryjoin= commentedBy == User.id, post_update=True)
 
 
 class Rider(Base):
@@ -123,7 +108,7 @@ class Rider(Base):
     dateAdded = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     addedBy = Column(Integer, ForeignKey('users.id'))
     orders = relationship("Order", back_populates="riderowner")
-    manager = relationship("User", back_populates="riders")
+    add_by =relationship("User", primaryjoin= addedBy == User.id, post_update=True)
 
 class Account(Base):
     __tablename__ = 'accounts'
@@ -135,4 +120,6 @@ class Account(Base):
     modifyBy = Column(Integer, ForeignKey('users.id'))
     dateModified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     company = relationship("Company", back_populates="account")
-    foods = relationship("User", backref="accounts")
+    modify_by =relationship("User", primaryjoin= modifyBy == User.id, post_update=True)
+
+   

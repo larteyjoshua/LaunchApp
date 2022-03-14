@@ -112,6 +112,7 @@ class Food(BaseModel):
         orm_mode = True
 
 class ShowFood(BaseModel):
+    id: int
     name:str
     ingredients:str
     imagePath: str = None
@@ -199,3 +200,6 @@ class TokenData(BaseModel):
 class UserRoleBase(BaseModel):
     user_id: Optional[int] = None
     role_id: Optional[int] = None
+    
+class Msg(BaseModel):
+    msg: str

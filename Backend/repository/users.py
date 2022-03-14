@@ -1,9 +1,12 @@
 from sqlalchemy.orm import Session
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, BackgroundTasks
 from utils.hashing import Hash
 from models import models
 from utils import schemas
-
+from emails.newUser import addNewUser
+from utils.passwordRecoveryHelper import generate_password_recovery_token, verify_password_reset_token
+from emails import passwordRecoveryEmail
+from utils.config import settings
 
 
 def create(request: schemas.User, db: Session):
@@ -18,6 +21,8 @@ def create(request: schemas.User, db: Session):
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
+        respo = addNewUser(request.email, request.fullName)
+        print(respo)
         return{"success": f"User with the email {request.email} created"}
 
 
@@ -87,3 +92,37 @@ def get_by_name(fullName: str, db: Session):
     user = db.query(models.User).filter(
         models.User.fullName ==fullName).first()
     return user
+
+
+def passwordRecover( email: str, db: Session):
+    user = db.query(models.User).filter(models.User.email == email).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="The user with this email does not exist in the system.",
+        )
+    token = generate_password_recovery_token(email=user.email)
+    server_host = settings.SERVER_HOST
+    link = f"{server_host}/reset-password?token={token}"
+    passwordRecoveryEmail.passwordRevovery(user.email, user.fullName, link)
+    return {"msg": "Password recovery email sent"}
+
+def passwordReset(token: str, new_password: str, db: Session):
+    email = verify_password_reset_token(token)
+    if not email:
+        raise HTTPException(status_code=400, detail="Invalid token")
+    user = db.query(models.User).filter(models.User.email == email).first()
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="The user with this username does not exist in the system.",
+        )
+    elif not is_active(user):
+        raise HTTPException(status_code=400, detail="Inactive user")
+    
+
+    user.paaword = Hash.bcrypt(new_password)
+    db.add(user)
+    db.commit()
+    return {"msg": "Password updated successfully"}
