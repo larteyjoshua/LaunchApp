@@ -1,10 +1,13 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from models import  models
 from utils.database import engine
 from routers import userLogin, userActivities, superAdminActivities, adminactivities
 from fastapi.middleware.cors import CORSMiddleware
 from utils.config import settings
 from routers.basicRouters import users, admin, roles, company, riders, foods, orders, feedbacks, account 
+from utils import initialsdb
+from sqlalchemy.orm import Session
+from utils import database
 
 #models.Base.metadata.create_all(bind=engine)
 
@@ -47,6 +50,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+get_db = database.get_db
+
+@app.on_event("startup")
+async def startup_event():
+    async def db_init(db: Session = Depends(get_db)):
+        return initialsdb.databaseinit(db)
+    
+    
 
 @app.get("/")
 async def home():

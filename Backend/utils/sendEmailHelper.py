@@ -4,7 +4,7 @@ from sendgrid.helpers.mail import Mail, Email, To, Content
 from utils.config import settings
 
 def sendMail(emails:str, message: str, subject: str):
-    sg = sendgrid.SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
+    sg = sendgrid.SendGridAPIClient(api_key=settings.SENDGRID_APIKEY)
     from_email = Email("larteyjoshua@gmail.com")  # Change to your verified sender
     to_email = To(emails)  # Change to your recipient
     content = Content("text/html", message)

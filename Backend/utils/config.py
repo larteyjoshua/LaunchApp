@@ -18,7 +18,6 @@ class Settings(BaseSettings):
     USERS_OPEN_REGISTRATION: Optional[int] = None
     ALLOWED_EXTENSIONS = ('png', 'jpg', 'jpeg') 
     ENVIRONMENT: Optional[str]
-    SERVER_HOST: str = os.environ.get("SERVER_HOST")
 
     FIRST_SUPER_ADMIN_EMAIL: str = os.environ.get("FIRST_SUPER_ADMIN_EMAIL")
     FIRST_SUPER_ADMIN_PASSWORD: str  =os.environ.get("FIRST_SUPER_ADMIN_PASSWORD")
@@ -28,9 +27,9 @@ class Settings(BaseSettings):
     REGION_NAME: str = os.environ.get("REGION_NAME")
     SIGNATURE_VERSION: str=os.environ.get("SIGNATURE_VERSION")
     BUCKET_NAME: str =os.environ.get("BUCKET_NAME")
-    SENDGRID_API_KEY: str=os.environ.get("SENDGRID_API_KEY")
+    SENDGRID_APIKEY: str=os.environ.get("SENDGRID_APIKEY")
 
-    SQLALCHEMY_DATABASE_URI: str = os.environ.get("SQLALCHEMY_DATABASE_URI")
+    SQLALCHEMY_DATABASE_URI: str = os.environ.get("DATABASE_URL")
     
     EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
 

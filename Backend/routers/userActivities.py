@@ -59,6 +59,6 @@ async def update(id: int, request: schemas.ShowOrder, db: Session = Depends(get_
     )):
     return orders.update(id, request, db)
 
-@router.get('/ini_db')
-async def db_init(db: Session = Depends(get_db)):
-    return initialsdb.databaseinit(db)
+# @router.get('/ini_db')
+# async def db_init(db: Session = Depends(get_db)):
+#     return initialsdb.databaseinit(db)
