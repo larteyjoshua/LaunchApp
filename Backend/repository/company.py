@@ -14,8 +14,7 @@ def create(request: schemas.Company, db: Session):
         new_company = models.Company(name=request.name,
                                      email=request.email,
                                     phoneNumber = request.phoneNumber,
-                                     location=request.location,
-                                     addedBy = request.addedBy 
+                                     location=request.location
                                     )
         db.add(new_company)
         db.commit()

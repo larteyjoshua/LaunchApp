@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from fastapi import HTTPException, status, BackgroundTasks
+from fastapi import HTTPException, status, BackgroundTasks, Request
 from utils.hashing import Hash
 from models import models
 from utils import schemas
@@ -94,7 +94,8 @@ def get_by_name(fullName: str, db: Session):
     return user
 
 
-def passwordRecover( email: str, db: Session):
+def passwordRecover( email: str, db: Session, url:str):
+
     user = db.query(models.User).filter(models.User.email == email).first()
 
     if not user:
@@ -103,8 +104,9 @@ def passwordRecover( email: str, db: Session):
             detail="The user with this email does not exist in the system.",
         )
     token = generate_password_recovery_token(email=user.email)
-    server_host = settings.SERVER_HOST
-    link = f"{server_host}/reset-password?token={token}"
+
+    link = f"{url}?token={token}"
+    print(link)
     passwordRecoveryEmail.passwordRevovery(user.email, user.fullName, link)
     return {"msg": "Password recovery email sent"}
 

@@ -63,8 +63,7 @@ class Company(BaseModel):
     email:str
     phoneNumber: str = None
     location: str
-    addedBy: int
-
+   
     class Config():
         orm_mode = True
         

@@ -1,4 +1,4 @@
-from config import settings
+from utils.config import settings
 class User:
     """
     Constants for the various roles scoped in the application ecosystem

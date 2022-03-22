@@ -1,8 +1,8 @@
-"""First commit of tables
+"""First New Commit
 
-Revision ID: 2c79de14d3bf
+Revision ID: a02e9f6c7e40
 Revises: 
-Create Date: 2022-03-09 00:56:12.902696
+Create Date: 2022-03-22 00:48:01.625763
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2c79de14d3bf'
+revision = 'a02e9f6c7e40'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,8 +26,6 @@ def upgrade():
     sa.Column('isActive', sa.Boolean(), nullable=True),
     sa.Column('phoneNumber', sa.String(), nullable=True),
     sa.Column('dateAdded', sa.DateTime(), nullable=True),
-    sa.Column('addedBy', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['addedBy'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_company_email'), 'company', ['email'], unique=True)

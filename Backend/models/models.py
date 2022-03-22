@@ -17,11 +17,11 @@ class Company(Base):
     isActive = Column(Boolean(), default=True)
     phoneNumber = Column(String)
     dateAdded = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-    addedBy = Column(Integer, ForeignKey('users.id'))
-    users =relationship("User",secondary=association_table,back_populates="company",
-                        )
+    
+    addedBy =relationship("User",secondary=association_table,back_populates="companies")
     orders = relationship("Order")
     account = relationship("Account", uselist=False, back_populates="company")
+    
 
 class Role(Base):
     __tablename__ = 'roles'
@@ -50,12 +50,14 @@ class User(Base):
     password = Column(String)
     dateCreated = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     isActive = Column(Boolean(), default=True)
-    companyId =  Column(Integer, ForeignKey('company.id'))
-    company =  relationship(
+    companyId =  Column(Integer, ForeignKey('company.id'), nullable=True)
+    companies =  relationship(
         "Company",
         secondary=association_table,
-        back_populates="users", primaryjoin= companyId == Company.id, post_update=True)
+        back_populates="addedBy", primaryjoin= companyId == Company.id, post_update=True)
     user_role = relationship("UserRole", back_populates="user", uselist=False)
+   
+   
     
 class Food(Base):
     __tablename__ = 'foods'

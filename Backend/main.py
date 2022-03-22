@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from models import  models
 from utils.database import engine
 from routers import userLogin, userActivities, superAdminActivities, adminactivities
@@ -56,6 +56,14 @@ async def home():
 async def home():
     return {"message": "Hello World"}
 
+@app.get("/requestinfo")
+def info(request: Request):
+    print(request.url)
+    hostPort = request.client.port
+    hostName = request.client.host
+    url = request.url._url
+    return { "hostName": hostName, "port": hostPort, "url": url }
+    
 # app.include_router(users.router)
 # app.include_router(admin.router)
 # app.include_router(roles.router)
@@ -70,3 +78,4 @@ app.include_router(userLogin.router)
 app.include_router(userActivities.router)
 app.include_router(adminactivities.router)
 app.include_router(superAdminActivities.router)
+
