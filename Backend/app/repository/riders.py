@@ -39,7 +39,7 @@ def destroy(id: int, db: Session):
                             detail=f"Rider with id {id} not found")
     rider.delete(synchronize_session=False)
     db.commit()
-    return 'done'
+    return{"success": f"Rider Deleted"}
 
 def update(id: int, request: schemas.Rider, db: Session):
     rider = db.query(models.Rider).filter(models.Rider.id == id).first()

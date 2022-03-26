@@ -42,7 +42,8 @@ def destroy(id: int, db: Session):
                             detail=f"Order with id {id} not found")
     order.delete(synchronize_session=False)
     db.commit()
-    return 'done'
+    return {"success": f"Order Deleted"}
+
 
 def update(id: int, request: schemas.ShowOrder, db: Session):
     order = db.query(models.Order).filter(models.Order.id == id).first()

@@ -35,7 +35,7 @@ def destroy(id: int, db: Session):
                             detail=f"feedback with id {id} not found")
     feedback.delete(synchronize_session=False)
     db.commit()
-    return 'done'
+    return {"success": f"Feedback Deleted"}
 
 def update(id: int, request: schemas.ShowFeedback, db: Session):
     feedback = db.query(models.Feedback).filter(models.Feedback.id == id).first()

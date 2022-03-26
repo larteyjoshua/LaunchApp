@@ -34,7 +34,7 @@ def destroy(id: int, db: Session):
                             detail=f"User with id {id} not found")
     role.delete(synchronize_session=False)
     db.commit()
-    return{"success": f"Role with the name {role.name} created"}
+    return{"success": f"Role with the name {role.name} Deleted"}
 
 
 def update(id: int, request: schemas.ShowUser, db: Session):

@@ -49,7 +49,8 @@ def destroy(id: int, db: Session):
     db.delete(food)
     #food.delete(synchronize_session=False)
     db.commit()
-    return 'done'
+    return {"success": f"Food Deleted"}
+
 
 def update(id: int, request: schemas.Food, db: Session):
     food = db.query(models.Food).filter(models.Food.id == id).first()

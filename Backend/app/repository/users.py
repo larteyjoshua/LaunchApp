@@ -46,7 +46,8 @@ def destroy(id: int, db: Session):
                             detail=f"User with id {id} not found")
     user.delete(synchronize_session=False)
     db.commit()
-    return 'done'
+    return {"success": f"User Deleted"}
+
 
 def update(id: int, request: schemas.ShowUser, db: Session):
     user = db.query(models.User).filter(models.User.id == id).first()
