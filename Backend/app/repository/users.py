@@ -1,12 +1,14 @@
 from sqlalchemy.orm import Session
-from fastapi import HTTPException, status, BackgroundTasks, Request
+from fastapi import HTTPException, status
 from app.utils.hashing import Hash
 from app.models import models
 from app.utils import schemas
 from app.emails.newUser import addNewUser
+from app.emails.addBulkUser import addBulkUser
 from app.utils.passwordRecoveryHelper import generate_password_recovery_token, verify_password_reset_token
 from app.emails import passwordRecoveryEmail
-from app.utils.config import settings
+import random
+import string
 
 
 def create(request: schemas.User, db: Session):
@@ -127,3 +129,29 @@ def passwordReset(token: str, new_password: str, db: Session):
     db.add(user)
     db.commit()
     return {"msg": "Password updated successfully"}
+
+def createBulk(request: schemas.BulkUser, companyName:str, db: Session):
+    user = db.query(models.User).filter(models.User.email == request.email).first()
+    company = db.query(models.Company).filter(models.Company.name == companyName).first()
+    if user:
+        return{"info": f"User with the email {request.email} already exist"}
+    elif not company:
+         return{"info": f"Company with the Name: {companyName} does not exist"}
+    else: 
+        lower = string.ascii_lowercase
+        upper = string.ascii_uppercase
+        num = string.digits
+        symbols = string.punctuation
+        all = lower + upper + num + symbols
+        temp = random.sample(all,12)
+        generatePassword = "".join(temp)
+        print(generatePassword)
+
+        new_user = models.User(fullName=request.fullName, email=request.email, password=Hash.bcrypt(generatePassword), companyId =company.id)
+        print(new_user)
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        respo = addBulkUser(request.email, request.fullName,generatePassword)
+        print(respo)
+       

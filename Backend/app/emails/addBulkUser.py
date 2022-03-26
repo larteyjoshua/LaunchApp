@@ -278,10 +278,10 @@ body = """\  <tr>
                     <h3>Welcome to Launchapp</h3>
                      <p  style="padding: 0 3em;text-align: left;"> Hi {},</p>
                      <p style="padding: 0 3em;text-align: left;">
-                     Thank you for using LaunchApp. One Food had been added. Details below:. 
-                   <p  style="padding: 0 3em;text-align: left;"> Name: {},</p>
-                    <p  style="padding: 0 3em;text-align: left;"> Price:  {},</p>
-                     <p  style="padding: 0 3em;text-align: left;"> Menu: {},</p>
+                     You have been sign up on Launchapp. Enjoy the best of launch from us. 
+                     Here are your Details:
+                     Username: {}
+                     Password: {}
                     </p>
                   </div>
                   <div class="icon">
@@ -303,7 +303,7 @@ footer = """ <tr>
                     <tr>
                       <td width="40%" class="logo" style="text-align: center;">
                         <h2>Always Ready to Serve Your Launch</h2>
-                        <p><a href="#" class="btn btn-white-outline">Get Started</a></p>
+                       C
                       </td>
                     </tr>
                   </table>
@@ -311,8 +311,6 @@ footer = """ <tr>
               </tr>
             </table>
         </tr>
-        
-      
       </table>
     </div>
   </center>
@@ -321,10 +319,11 @@ footer = """ <tr>
 
 </html>"""
 
-def getEmailMessage(name: str, price: float, ingredient: str):
-    return ''.join([ header, body.format(name, price, ingredient), footer])
+def getEmailMessage(userName: str, email: str, password: str):
+    return ''.join([ header, body.format(userName, email, password), footer])
 
-def addNewFood(userEmail:str, foodName: str, price:float, ingredients: str):
-    subject:str ="LaunchApp New Food Added"
-    message = getEmailMessage(foodName, price, ingredients)
-    sendEmailHelper.sendMail(userEmail, message, subject)
+def addBulkUser(userEmail:str, userName: str, password: str):
+    subject:str ="LaunchApp welcome New User"
+    message = getEmailMessage(userName,userEmail,password)
+    return sendEmailHelper.sendMail(userEmail, message, subject)
+    

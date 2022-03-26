@@ -1,4 +1,4 @@
-from utils import sendEmailHelper
+from app.utils import sendEmailHelper
 
 header ="""<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"

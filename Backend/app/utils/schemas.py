@@ -202,3 +202,10 @@ class UserRoleBase(BaseModel):
     
 class Msg(BaseModel):
     msg: str
+    
+class BulkUser(BaseModel):
+    fullName:str
+    email:str
+    
+    class Config():
+        orm_mode = True

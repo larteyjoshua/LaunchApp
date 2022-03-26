@@ -1,3 +1,4 @@
+import csv
 from fastapi import APIRouter, Depends, status, Security, UploadFile, Form, File
 from app.models import  models
 from sqlalchemy.orm import Session
@@ -6,6 +7,10 @@ from app.repository import admin, company, roles, users, riders, foods, account,
 from typing import List
 from app.utils.userRoles import Role
 from app.utils.uploadHelper import handle_file_upload
+import codecs
+import pandas as pd
+from io import StringIO
+import csv
 
 router = APIRouter(
     prefix = '/admin'
@@ -145,7 +150,7 @@ async def get_user(id: int, db: Session = Depends(get_db), current_user: schemas
     )):
     return users.show(id, db)
 
-@router.get('/users/all',  response_model=List[schemas.User], tags = ['Admins', 'Super Admin'])
+@router.get('/users/all',  response_model=List[schemas.ShowUser], tags = ['Admins', 'Super Admin'])
 async def all(db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]],
@@ -311,3 +316,28 @@ async def get_feedback_by_food(foodId: int, db: Session = Depends(get_db), curre
         scopes=[Role.SUPER_ADMIN["name"], Role.ADMIN["name"], Role.COOK["name"]],
     )):
     return feedbacks.show_by_food(foodId, db)
+
+@router.post('/bulk_users/', tags = ['Admins', 'Super Admin' ])
+async def create_bulk_user(
+        name: str = Form(...),
+        csvFile: UploadFile = File(...),
+        db: Session = Depends(get_db), 
+        current_user: schemas.User = Security(
+        oauth2.get_current_active_user,
+        scopes=[Role.SUPER_ADMIN["name"], Role.ADMIN["name"]],
+    )):
+    print(name)
+    print(csvFile.content_type)
+    # df = pd.DataFrame(pd.read_excel(csvFile.file, encoding ='ISO-8859-1'))
+    readInputFile = csv.DictReader(codecs.iterdecode(csvFile.file,'ISO-8859-1'))
+    counter = 0
+    for row in readInputFile:
+        try:
+            counter = counter + 1
+            print(row)
+            print(row['Name'], row['Email'])
+            userRow = schemas.BulkUser(fullName = row['Name'],  email = row['Email'])
+            users.createBulk(userRow, name, db)
+        except Exception as e:
+            return {"error": f" Oops!, {e.__class__,} occured"}
+    return{"success": f"{counter} Users Successfully Added"}

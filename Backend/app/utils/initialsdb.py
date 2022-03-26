@@ -1,4 +1,3 @@
-
 from app.utils.config import settings
 from sqlalchemy.orm import Session
 from app.utils import schemas

@@ -12,7 +12,7 @@ from app.utils import database
 #models.Base.metadata.create_all(bind=engine)
 
 description = """
-LaunchApp API helps you to booked your launch from a service provider and 
+LunchApp API helps you to booked your launch from a service provider and 
 got it deliver to your office with payment manage by company. 🚀
 
 ## Admins
@@ -31,7 +31,7 @@ app = FastAPI(
     description = description,
     contact={
         "name": "Joshua Lartey",
-        "url": "https://github.com/larteyjoshua",
+        "url": "https://www.linkedin.com/in/joshua-lartey-2ba404199/",
         "email": "larteyjoshua@gmail.com",
     },
     license_info={
