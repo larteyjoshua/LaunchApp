@@ -20,7 +20,7 @@ def create(request: schemas.Food, db: Session):
         db.add(new_food)
         db.commit()
         db.refresh(new_food)
-        return{"success": f"Food with the name {request.name} created"}
+        return new_food
 
 
 def show(id: int, db: Session):
@@ -49,7 +49,7 @@ def destroy(id: int, db: Session):
     db.delete(food)
     #food.delete(synchronize_session=False)
     db.commit()
-    return {"success": f"Food Deleted"}
+    return food
 
 
 def update(id: int, request: schemas.Food, db: Session):

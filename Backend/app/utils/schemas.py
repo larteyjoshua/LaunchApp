@@ -1,3 +1,4 @@
+from cgitb import text
 from typing import List, Optional
 from pydantic import BaseModel
 from datetime import  datetime
@@ -15,6 +16,7 @@ class ShowUser(BaseModel):
     id: int
     fullName:str
     email:str
+    dateCreated: datetime
     password: str
     companyId: Optional[int] = None
     isActive: bool
@@ -29,8 +31,7 @@ class ShowAdmin(BaseModel):
     email:str = None
     password: str = None
     isActive: bool =None
-    name:  Optional[str] = None
-    role_id: Optional[int] = None
+    
   
     
     class Config():
@@ -53,6 +54,7 @@ class Role(BaseModel):
 class ShowRole(BaseModel):
     id: int
     name: str
+    description: str
     dateAdded: datetime
     
     class Config():
@@ -68,13 +70,13 @@ class Company(BaseModel):
         orm_mode = True
         
 class ShowCompany(BaseModel):
+    id: int
     name:str
     email:str
     phoneNumber: str = None
     isActive: Optional[bool] = None
     location: str
     dateAdded: datetime
-    addedBy: int
 
     class Config():
         orm_mode = True
@@ -90,6 +92,7 @@ class Rider(BaseModel):
         orm_mode = True
 
 class ShowRider(BaseModel):
+    id: int
     name:str
     email:str
     tellNumber: str = None
@@ -155,10 +158,11 @@ class Feedback(BaseModel):
         orm_mode = True
         
 class ShowFeedback(BaseModel):
+    id:int
     foodId: int
     comment: str
     stars: int
-    commentedBy: str
+    commentedBy: int
     dateCommented: datetime = None
     
     class Config():
@@ -174,6 +178,7 @@ class Account(BaseModel):
         orm_mode = True
 
 class ShowAccount(BaseModel):
+    id: int
     companyId: int
     totalCost: float
     amountPaid: float = None

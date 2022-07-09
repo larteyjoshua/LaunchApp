@@ -10,7 +10,7 @@ def create(request: schemas.UserRoleBase, db: Session):
         db.add(new_role)
         db.commit()
         db.refresh(new_role)
-        return{"success": f"Role assigin to user with {request.user_id}"}
+        return new_role
 
 
 def show(id: int, db: Session):
@@ -25,13 +25,13 @@ def get_all(db: Session):
     return roles
 
 def destroy(id: int, db: Session):
-    role = db.query(models.UserRole).filter(models.UserRole.role_id == id)
-    if not role.first():
+    role = db.query(models.UserRole).filter(models.UserRole.role_id == id).first()
+    if not role:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"User Role with id {id} not found")
-    role.delete(synchronize_session=False)
+    db.delete(role)
     db.commit()
-    return{"success": f"Role with the name {role.role_id} Deleted"}
+    return role
 
 
 def update(id: int, request: schemas.UserRoleBase, db: Session):

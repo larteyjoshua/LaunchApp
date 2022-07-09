@@ -1,0 +1,30 @@
+<div class="food-display">
+  <mat-card class="home-card">
+    <mat-card-content class="home-card-content">
+      <img mat-card-image
+        src="{{imagePath}}"
+        alt="{{foodName}}">
+      <div>
+        <ng-template #t let-fill="fill">
+          <span class="star" [class.full]="fill === 100">
+            <span class="half" [style.width.%]="fill">&hearts;</span>&hearts;
+          </span>
+        </ng-template>
+
+      <mat-card-title-group>
+      <mat-card-title>{{foodName}}</mat-card-title>
+      <mat-card-subtitle>
+        <!-- <ngb-rating [(rate)]=  [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating> -->
+      </mat-card-subtitle>
+      <mat-card-subtitle>Made-Up: {{ingredients}}</mat-card-subtitle>
+      <mat-card-subtitle>Commented By: {{commentBy}}</mat-card-subtitle>
+      <mat-card-subtitle>Date: {{dateCommented}}</mat-card-subtitle>
+    </mat-card-title-group>
+    </div>
+    </mat-card-content>
+
+    <mat-card-content >
+      <p> {{comment}}</p>
+    </mat-card-content>
+</mat-card>
+</div>

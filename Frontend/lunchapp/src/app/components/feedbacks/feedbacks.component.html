@@ -1,0 +1,35 @@
+<div class="grid-container">
+  <h1 class="mat-h1">Feedbacks</h1>
+
+  <div class="search-div">
+    <mat-form-field class="search-form-field" floatLabel="never">
+      <input matInput [(ngModel)]="searchKey" placeholder="Search" autocomplete="on" (keyup)="applyFilter()">
+      <button mat-button matSuffix mat-icon-button aria-label="Clear"*ngIf="searchKey"  (click)="onSearchClear()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <mat-grid-list cols="{{ ( cardLayout | async )?.columns }}" rowHeight="200px">
+    <mat-grid-tile
+    *ngFor="let mc of listData"
+    [colspan]="( cardLayout | async )?.miniCard?.cols"
+    [rowspan]="( cardLayout | async )?.miniCard?.rows">
+    <app-feedback-display-card
+      [id]="mc.id"
+      [foodName]="mc.foodName"
+      [imagePath]="mc.imagePath"
+      [ingredients]="mc.ingredients"
+      [dateCommented]="mc.dateCommented"
+      [comment]="mc.comment"
+      [commentBy]="mc.commentBy"
+      [stars]="mc.stars" >
+      </app-feedback-display-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+
+
+
+</div>
+
+

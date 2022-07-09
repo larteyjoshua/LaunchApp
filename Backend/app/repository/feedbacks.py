@@ -14,7 +14,7 @@ def create(request: schemas.Feedback, db: Session):
         db.add(new_feedback)
         db.commit()
         db.refresh(new_feedback)
-        return{"success": f"Feedback created on food with id: {request.foodId}"}
+        return new_feedback
 
 
 def show(id: int, db: Session):
@@ -33,9 +33,9 @@ def destroy(id: int, db: Session):
     if not feedback.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"feedback with id {id} not found")
-    feedback.delete(synchronize_session=False)
+    db.delete(feedback)
     db.commit()
-    return {"success": f"Feedback Deleted"}
+    return feedback
 
 def update(id: int, request: schemas.ShowFeedback, db: Session):
     feedback = db.query(models.Feedback).filter(models.Feedback.id == id).first()

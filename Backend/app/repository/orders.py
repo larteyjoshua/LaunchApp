@@ -21,7 +21,7 @@ def create(request: schemas.Food, db: Session, current_user):
             db.add(new_order)
             db.commit()
             db.refresh(new_order)
-            return{"success": f"Order with the Food name {food.name} Booked"}
+            return new_order
 
 
 def show(id: int, db: Session):
@@ -36,13 +36,13 @@ def get_all(db: Session):
     return orders
 
 def destroy(id: int, db: Session):
-    order = db.query(models.Order).filter(models.Order.id == id)
-    if not order.first():
+    order = db.query(models.Order).filter(models.Order.id == id).first()
+    if not order:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Order with id {id} not found")
-    order.delete(synchronize_session=False)
+    db.delete(order)
     db.commit()
-    return {"success": f"Order Deleted"}
+    return order
 
 
 def update(id: int, request: schemas.ShowOrder, db: Session):

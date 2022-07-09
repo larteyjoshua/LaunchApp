@@ -8,7 +8,6 @@ from typing import List
 from app.utils.userRoles import Role
 from app.utils.uploadHelper import handle_file_upload
 import codecs
-import pandas as pd
 from io import StringIO
 import csv
 
@@ -49,7 +48,7 @@ async def update(id: int, request: schemas.ShowAdmin, db: Session = Depends(get_
 
 
 #Company
-@router.post('/company/', tags = ['Admins', 'Super Admin'])
+@router.post('/company/add', tags = ['Admins', 'Super Admin'])
 async def create_company(request: schemas.Company, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]],
@@ -72,7 +71,7 @@ async def all(db: Session = Depends(get_db), current_user: schemas.User = Securi
     return company.get_all(db)
 
 
-@router.put('/company/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowCompany, tags = ['Admins', 'Super Admin'])
+@router.put('/company/update/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowCompany, tags = ['Admins', 'Super Admin'])
 async def update(id: int, request: schemas.Company, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]],
@@ -81,7 +80,7 @@ async def update(id: int, request: schemas.Company, db: Session = Depends(get_db
 
 #Roles
 
-@router.post('/role/', tags = ['Admins', 'Super Admin'])
+@router.post('/role/add', tags = ['Admins', 'Super Admin'])
 async def create_role(request: schemas.Role, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]],
@@ -103,7 +102,7 @@ async def all(db: Session = Depends(get_db), current_user: schemas.User = Securi
     return roles.get_all(db)
 
 
-@router.put('/role/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowRole, tags = ['Admins', 'Super Admin'])
+@router.put('/role/update/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowRole, tags = ['Admins', 'Super Admin'])
 async def update(id: int, request: schemas.Role, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]],
@@ -112,7 +111,7 @@ async def update(id: int, request: schemas.Role, db: Session = Depends(get_db), 
 
 #Assigning User Roles.
 
-@router.post('/userRole/', tags = ['Admins', 'Super Admin'])
+@router.post('/userRole/add', tags = ['Admins', 'Super Admin'])
 async def assigin_userRole(request: schemas.UserRoleBase, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]],
@@ -134,7 +133,7 @@ async def all(db: Session = Depends(get_db), current_user: schemas.User = Securi
     return user_role.get_all(db)
 
 
-@router.put('/userRole/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.UserRoleBase, tags = ['Admins', 'Super Admin'])
+@router.put('/userRole/update/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.UserRoleBase, tags = ['Admins', 'Super Admin'])
 async def update(id: int, request: schemas.Role, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]],
@@ -150,7 +149,7 @@ async def get_user(id: int, db: Session = Depends(get_db), current_user: schemas
     )):
     return users.show(id, db)
 
-@router.get('/users/all',  response_model=List[schemas.ShowUser], tags = ['Admins', 'Super Admin'])
+@router.get('/user/',  response_model=List[schemas.ShowUser], tags = ['Admins', 'Super Admin'])
 async def all(db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]],
@@ -158,15 +157,23 @@ async def all(db: Session = Depends(get_db), current_user: schemas.User = Securi
     return users.get_all(db)
 
 
-@router.put('/user/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowUser, tags = ['Admins', 'Super Admin'])
+@router.put('/user/update/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowUser, tags = ['Admins', 'Super Admin'])
 async def update(id: int, request: schemas.ShowUser, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]],
     )):
     return users.update(id, request, db)
 
+
+@router.post('/user/register',  tags = ['Admins', 'Super Admin'])
+async def create_user(request: schemas.User, db: Session = Depends(database.get_db),
+ current_user: schemas.User = Security(
+        oauth2.get_current_active_user,
+        scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]])):
+    return users.create(request, db)
+
 #Riders
-@router.post('/rider/', tags = ['Admins', 'Order Manager',  'Super Admin'])
+@router.post('/rider/add', tags = ['Admins', 'Order Manager',  'Super Admin'])
 async def create_rider(request: schemas.Rider, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]],
@@ -188,7 +195,7 @@ async def all(db: Session = Depends(get_db), current_user: schemas.User = Securi
     return riders.get_all(db)
 
 
-@router.put('/rider/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.Rider, tags = ['Admins', 'Order Manager', 'Super Admin'])
+@router.put('/rider/update/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.Rider, tags = ['Admins', 'Order Manager', 'Super Admin'])
 async def update(id: int, request: schemas.Rider, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]],
@@ -197,7 +204,7 @@ async def update(id: int, request: schemas.Rider, db: Session = Depends(get_db),
 
 #Foods
 
-@router.post('/food/', tags = ['Admins', 'Super Admin' ])
+@router.post('/food/add', tags = ['Admins', 'Super Admin' ])
 async def create_food(name: str= Form(...),
            ingredients: str = Form(...),
             price: float = Form(...),
@@ -226,7 +233,7 @@ async def all(db: Session = Depends(get_db), current_user: schemas.User = Securi
     return foods.get_all(db)
 
 
-@router.put('/food/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.Food,  tags = ['Admins', 'Super Admin'])
+@router.put('/food/update/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.Food,  tags = ['Admins', 'Super Admin'])
 async def update(id: int, name: str= Form(...),
            ingredients: str = Form(...),
             price: float = Form(...),
@@ -242,7 +249,7 @@ async def update(id: int, name: str= Form(...),
 
 #Accounting
 
-@router.post('/account/',  tags = ['Admins', 'Accountant', 'Super Admin' ])
+@router.post('/account/pay',  tags = ['Admins', 'Accountant', 'Super Admin' ])
 async  def create_account(request: schemas.Account, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"], Role.ADMIN["name"], Role.ACCOUNT_MANAGER["name"]],
@@ -264,7 +271,7 @@ async  def all(db: Session = Depends(get_db), current_user: schemas.User = Secur
     return account.get_all(db)
 
 
-@router.put('/account/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowAccount,  tags = ['Admins', 'Accountant', 'Super Admin' ])
+@router.put('/account/update/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowAccount,  tags = ['Admins', 'Accountant', 'Super Admin' ])
 async  def update(id: int, request: schemas.ShowAccount, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"], Role.ADMIN["name"], Role.ACCOUNT_MANAGER["name"]],
@@ -287,7 +294,7 @@ async def all(db: Session = Depends(get_db), current_user: schemas.User = Securi
     )):
     return orders.get_all(db)
 
-@router.put('/order/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowOrder,  tags = ['Admins', 'Accountant', 'Super Admin', 'Cook'])
+@router.put('/order/update/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowOrder,  tags = ['Admins', 'Accountant', 'Super Admin', 'Cook'])
 async def update(id: int, request: schemas.ShowOrder, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"], Role.ADMIN["name"], Role.COOK["name"], Role.ORDER_MANAGER["name"],  Role.ACCOUNT_MANAGER["name"]],
@@ -317,7 +324,7 @@ async def get_feedback_by_food(foodId: int, db: Session = Depends(get_db), curre
     )):
     return feedbacks.show_by_food(foodId, db)
 
-@router.post('/bulk_users/', tags = ['Admins', 'Super Admin' ])
+@router.post('/bulk_users/csv', tags = ['Admins', 'Super Admin' ])
 async def create_bulk_user(
         name: str = Form(...),
         csvFile: UploadFile = File(...),

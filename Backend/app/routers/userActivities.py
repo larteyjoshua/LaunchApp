@@ -5,6 +5,7 @@ from app.utils import database, schemas, oauth2
 from app.repository import users, orders
 from typing import List
 from app.utils.userRoles import Role
+from app.repository import feedbacks
 from app.utils import initialsdb
 
 
@@ -21,6 +22,13 @@ async def update(id: int, request: schemas.ShowUser, db: Session = Depends(get_d
         scopes=[Role.USER["name"],],
     )):
     return users.update(id, request, db)
+
+@router.post('/feedback/')
+async  def create_feedback(request: schemas.Feedback, db: Session = Depends(get_db), current_user: schemas.User = Security(
+        oauth2.get_current_active_user,
+       scopes=[Role.USER["name"],],
+    )):
+    return feedbacks.create(request, db)
 
 @router.get('/detials', response_model=schemas.ShowUser)
 async def get_user( db: Session = Depends(get_db), current_user: schemas.User = Security(

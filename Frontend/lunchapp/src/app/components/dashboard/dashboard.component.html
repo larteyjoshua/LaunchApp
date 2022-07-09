@@ -1,0 +1,50 @@
+<!--dash.component.html-->
+<div class="grid-container">
+  <h1 class="mat-h1">Dashboard</h1>
+  <mat-grid-list cols="{{ ( cardLayout | async )?.columns }}" rowHeight="200px">
+
+    <!--Mini Cards-->
+    <mat-grid-tile
+    *ngFor="let mc of summaryDetailList"
+    [colspan]="( cardLayout | async )?.miniCard?.cols"
+    [rowspan]="( cardLayout | async )?.miniCard?.rows">
+      <app-mini-card
+      [title]="mc.title"
+      [isCurrency]="mc.isCurrency"
+      [value]="mc.value"
+      [color]="mc.color"
+      [percentValue]="mc.percentValue"
+      [icon]="mc.icon"
+      [isIncrease]="mc.isIncrease" >
+      </app-mini-card>
+    </mat-grid-tile>
+
+    <!--Charts-->
+    <mat-grid-tile
+    [colspan]="( cardLayout | async )?.chart?.cols"
+    [rowspan]="( cardLayout | async )?.chart?.rows">
+      <app-card title="Food Order">
+        <app-food-ordered [foodOredered]="foodOredered"></app-food-ordered>
+      </app-card>
+    </mat-grid-tile>
+
+    <mat-grid-tile
+    [colspan]="( cardLayout | async )?.chart?.cols"
+    [rowspan]="( cardLayout | async )?.chart?.rows">
+      <app-card title="Highest Day Order">
+        <app-highest-order-day  [highestOrder]="highestOrder"></app-highest-order-day>
+      </app-card>
+    </mat-grid-tile>
+
+
+    <!--Table-->
+    <mat-grid-tile
+    [colspan]="( cardLayout | async )?.table?.cols"
+    [rowspan]="( cardLayout | async )?.table?.rows">
+      <app-card title="Today's Order Table">
+       <app-todays-orders  [ordersDetailList]="ordersDetailList"></app-todays-orders>
+      </app-card>
+    </mat-grid-tile>
+
+  </mat-grid-list>
+ </div>

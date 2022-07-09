@@ -18,7 +18,7 @@ def create(request: schemas.Rider, db: Session):
         db.add(new_rider)
         db.commit()
         db.refresh(new_rider)
-        return{"success": f"Rider with the name {request.name} created"}
+        return new_rider
 
 
 def show(id: int, db: Session):
@@ -33,13 +33,13 @@ def get_all(db: Session):
     return riders
 
 def destroy(id: int, db: Session):
-    rider = db.query(models.Rider).filter(models.Rider.id == id)
-    if not rider.first():
+    rider = db.query(models.Rider).filter(models.Rider.id == id).first()
+    if not rider:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Rider with id {id} not found")
-    rider.delete(synchronize_session=False)
+    db.delete(rider)
     db.commit()
-    return{"success": f"Rider Deleted"}
+    return rider
 
 def update(id: int, request: schemas.Rider, db: Session):
     rider = db.query(models.Rider).filter(models.Rider.id == id).first()

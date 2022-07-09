@@ -13,77 +13,77 @@ router = APIRouter(
 )
 get_db = database.get_db
 
-@router.delete('/admin/{id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/admin/delete/{id}')
 async def destroy(id: int, db: Session = Depends(get_db),  current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"]],
     )):
     return admin.destroy(id, db)
 
-@router.delete('/role/{id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/role/delete/{id}')
 async def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"]],
     )):
     return roles.destroy(id, db)
 
-@router.delete('/userRole/{id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/userRole/delete/{id}')
 async def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"]],
     )):
     return user_role.destroy(id, db)
 
-@router.delete('/company/{id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/company/delete/{id}')
 async def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"]],
     )):
     return company.destroy(id, db)
 
-@router.delete('/user/{id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/user/delete/{id}')
 async def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"]],
     )):
     return users.destroy(id, db)
 
-@router.delete('/rider/{id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/rider/delete/{id}')
 async def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"]],
     )):
     return riders.destroy(id, db)
 
-@router.delete('/food/{id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/food/delete/{id}')
 async def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"]],
     )):
     return foods.destroy(id, db)
 
-@router.delete('/account/{id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/account/delete/{id}')
 async  def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"]],
     )):
     return account.destroy(id, db)
 
-@router.delete('/order/{id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/order/delete/{id}')
 async def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"]],
     )):
     return orders.destroy(id, db)
 
-@router.delete('/feedback/{id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/feedback/delete/{id}')
 async def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"]],
     )):
     return feedbacks.destroy(id, db)
 
-@router.delete('/order/{id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/order/delete/{id}')
 async def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"]],

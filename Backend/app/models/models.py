@@ -124,4 +124,12 @@ class Account(Base):
     company = relationship("Company", back_populates="account")
     modify_by =relationship("User", primaryjoin= modifyBy == User.id, post_update=True)
 
-   
+class SotreSummary(Base):
+    __tablename__ = 'storeSummaries'
+    id = Column(Integer, primary_key = True, index =True)
+    title = Column(String)
+    value = Column(Integer)
+    isIncrease = Column(Boolean())
+    percentValue = Column(Float)
+    color = Column(String)
+    icon = Column(String)

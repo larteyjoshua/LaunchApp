@@ -16,7 +16,7 @@ def create(request: schemas.Admin, db: Session):
         db.add(new_manager)
         db.commit()
         db.refresh(new_manager)
-        return{"success": f"Manager with the email {request.email} created"}
+        return new_manager
 
 
 def show(id: int, db: Session):
@@ -33,19 +33,20 @@ def get_all(db: Session):
     # models.Role).filter(
     # models.User.id ==  models.UserRole.user_id).filter(
     # models.UserRole.role_id == models.Role.id).filter(models.Role.name == "ADMIN").all()
-    admins = db.query(models.User).join(models.UserRole, models.User.id == models.UserRole.user_id).all()
+    # admins = db.query(models.User).join(models.UserRole, models.User.id == models.UserRole.user_id).all()
+    admins = db.query(models.User).filter(models.User.companyId == None).all()
     #roles = db.query(models.Role, models.UserRole).all()
 
     return admins
 
 def destroy(id: int, db: Session):
-    admin = db.query(models.User).filter(models.User.id == id)
-    if not admin.first():
+    admin = db.query(models.User).filter(models.User.id == id).first()
+    if not admin:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Admin with id {id} not found")
-    admin.delete(synchronize_session=False)
+    db.delete(admin)
     db.commit()
-    return{"success": f"Admin with the email {admin.email} Deleted"}
+    return admin
 
 def update(id: int, request: schemas.ShowUser, db: Session):
     admin = db.query(models.User).filter(models.User.id == id).first()
@@ -57,8 +58,6 @@ def update(id: int, request: schemas.ShowUser, db: Session):
     admin.email = request.email
     admin.fullName = request.fullName
     admin.isActive = request.isActive
-    admin.isSuper = request.isSuper
-    admin.roleId = request.roleId
     db.commit()
     db.refresh(admin)
     return admin

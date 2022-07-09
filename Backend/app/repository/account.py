@@ -14,7 +14,7 @@ def create(request: schemas.Account, db: Session):
         db.add(new_account)
         db.commit()
         db.refresh(new_account)
-        return{"success": f"Account created"}
+        return new_account
 
 
 def show(id: int, db: Session):
@@ -29,13 +29,13 @@ def get_all(db: Session):
     return accounts
 
 def destroy(id: int, db: Session):
-    account = db.query(models.Account).filter(models.Account.id == id)
-    if not account.first():
+    account = db.query(models.Account).filter(models.Account.id == id).first()
+    if not account:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Account with id {id} not found")
-    account.delete(synchronize_session=False)
+    db.delete(account)
     db.commit()
-    return 'done'
+    return account
 
 def update(id: int, request: schemas.ShowAccount, db: Session):
     account = db.query(models.Account).filter(models.Account.id == id).first()

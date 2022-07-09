@@ -43,7 +43,7 @@ def verify_token(token: str , db: Session,  security_scopes: SecurityScopes):
         logger.error("Error Decoding Token", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Could not validate credentials",
+            detail="Sorry, Session Expired. Login again",
         )
     
     user = users.showUser(db, email)

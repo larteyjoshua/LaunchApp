@@ -25,7 +25,7 @@ def create(request: schemas.User, db: Session):
         db.refresh(new_user)
         respo = addNewUser(request.email, request.fullName)
         print(respo)
-        return{"success": f"User with the email {request.email} created"}
+        return new_user
 
 
 def show(id: int, db: Session):
@@ -40,13 +40,13 @@ def get_all(db: Session):
     return users
 
 def destroy(id: int, db: Session):
-    user = db.query(models.User).filter(models.User.id == id)
-    if not user.first():
+    user = db.query(models.User).filter(models.User.id == id).first()
+    if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"User with id {id} not found")
-    user.delete(synchronize_session=False)
+    db.delete(user)
     db.commit()
-    return {"success": f"User Deleted"}
+    return user
 
 
 def update(id: int, request: schemas.ShowUser, db: Session):

@@ -52,20 +52,22 @@ app.add_middleware(
 )
 get_db = database.get_db
 
-@app.on_event("startup")
-async def startup_event():
-    async def db_init(db: Session = Depends(get_db)):
+# @app.on_event("startup")
+# async def startup_event():
+    
+    
+    
+@app.get("/l")
+async def home():
+    return {"message": "Hello World"}
+
+@app.get("/dbiniit")
+async def db_init(db: Session = Depends(get_db)):
         return initialsdb.databaseinit(db)
-    
-    
 
-@app.get("/")
-async def home():
-    return {"message": "Hello World"}
-
-@app.get("/")
-async def home():
-    return {"message": "Hello World"}
+# @app.get("/")
+# async def home():
+#     return {"message": "Hello World"}
 
 @app.get("/requestinfo")
 def info(request: Request):

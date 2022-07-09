@@ -1,0 +1,32 @@
+<div class="grid-container">
+  <h1 class="mat-h1">Foods</h1>
+
+  <div class="search-div">
+    <button mat-raised-button  (click)="onCreate()">
+      <mat-icon>add</mat-icon>Add
+    </button>
+    <mat-form-field class="search-form-field" floatLabel="never">
+      <input matInput [(ngModel)]="searchKey" placeholder="Search" autocomplete="on" (keyup)="applyFilter()">
+      <button mat-button matSuffix mat-icon-button aria-label="Clear"*ngIf="searchKey"  (click)="onSearchClear()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <mat-grid-list cols="{{ ( cardLayout | async )?.columns }}" rowHeight="200px">
+    <mat-grid-tile
+    *ngFor="let mc of listFoods"
+    [colspan]="( cardLayout | async )?.miniCard?.cols"
+    [rowspan]="( cardLayout | async )?.miniCard?.rows">
+    <app-food-display-card
+      [id]="mc.id"
+      [name]="mc.name"
+      [imagePath]="mc.imagePath"
+      [ingredients]="mc.ingredients"
+      [dateAdded]="mc.dateAdded"
+      [price]="mc.price"
+      [addedBy]="mc.addedBy" >
+      </app-food-display-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>

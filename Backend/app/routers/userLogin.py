@@ -9,10 +9,6 @@ from app.repository import users
 
 router = APIRouter(tags=['User-Authentication'])
 
-@router.post('/user/register')
-async def create_user(request: schemas.User, db: Session = Depends(database.get_db)):
-    return users.create(request, db)
-
 @router.post('/login')
 def login(request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(database.get_db)):
     user= users.authenticate(db, request)

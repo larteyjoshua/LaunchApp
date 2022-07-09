@@ -19,7 +19,7 @@ def create(request: schemas.Company, db: Session):
         db.add(new_company)
         db.commit()
         db.refresh(new_company)
-        return{"success": f"Company with the email {request.email} created"}
+        return new_company
 
 
 def show(id: int, db: Session):
@@ -34,13 +34,13 @@ def get_all(db: Session):
     return companies
 
 def destroy(id: int, db: Session):
-    Company = db.query(models.Company).filter(models.Company.id == id)
-    if not Company.first():
+    company = db.query(models.Company).filter(models.Company.id == id).first()
+    if not company:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Company with id {id} not found")
-    Company.delete(synchronize_session=False)
+    db.delete(company)
     db.commit()
-    return 'done'
+    return company
 
 def update(id: int, request: schemas.Company, db: Session):
     company = db.query(models.Company).filter(models.Company.id == id).first()
