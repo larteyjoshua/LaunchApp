@@ -1,4 +1,5 @@
 import csv
+from app.utils.schemas import User
 from fastapi import APIRouter, Depends, status, Security, UploadFile, Form, File
 from app.models import  models
 from sqlalchemy.orm import Session
@@ -325,7 +326,7 @@ async def get_feedback_by_food(foodId: int, db: Session = Depends(get_db), curre
     )):
     return feedbacks.show_by_food(foodId, db)
 
-@router.post('/bulk_users/csv', tags = ['Admins', 'Super Admin' ])
+@router.post('/bulk_users/csv', tags = ['Admins', 'Super Admin' ], response_model=List[schemas.ShowUser])
 async def create_bulk_user(
         name: str = Form(...),
         csvFile: UploadFile = File(...),
@@ -339,13 +340,15 @@ async def create_bulk_user(
     # df = pd.DataFrame(pd.read_excel(csvFile.file, encoding ='ISO-8859-1'))
     readInputFile = csv.DictReader(codecs.iterdecode(csvFile.file,'ISO-8859-1'))
     counter = 0
+    userBulk = []
     for row in readInputFile:
         try:
             counter = counter + 1
             print(row)
             print(row['Name'], row['Email'])
             userRow = schemas.BulkUser(fullName = row['Name'],  email = row['Email'])
-            users.createBulk(userRow, name, db)
+            addedUser = users.createBulk(userRow, name, db)
+            userBulk.append(addedUser)
         except Exception as e:
             return {"error": f" Oops!, {e.__class__,} occured"}
-    return{"success": f"{counter} Users Successfully Added"}
+    return userBulk

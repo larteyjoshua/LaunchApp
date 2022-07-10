@@ -148,11 +148,15 @@ def createBulk(request: schemas.BulkUser, companyName:str, db: Session):
         generatePassword = "".join(temp)
         print(generatePassword)
 
-        new_user = models.User(fullName=request.fullName, email=request.email, password=Hash.bcrypt(generatePassword), companyId =company.id)
-        print(new_user)
+        new_user = models.User(
+            fullName=request.fullName,
+             email=request.email, 
+             password=Hash.bcrypt(generatePassword), 
+             companyId =company.id)
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
         respo = addBulkUser(request.email, request.fullName,generatePassword)
         print(respo)
+        return new_user
        
