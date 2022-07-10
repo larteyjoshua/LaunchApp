@@ -30,4 +30,25 @@ export class DialogService {
     dialogConfig.height = '60%'
     this.dialog.open(component, dialogConfig)
    }
+
+   UserRoleDialog(component: any, action:any){
+    const dialogConfig= new MatDialogConfig();
+    dialogConfig.disableClose =true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '60%'
+    dialogConfig.height = '60%'
+    dialogConfig.data ={
+      action : action
+    }
+    this.dialog.open(component, dialogConfig)
+   }
+
+   BulkUsersCreatetionDialog(component: any){
+    const dialogConfig= new MatDialogConfig();
+    dialogConfig.disableClose =false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '70%'
+    dialogConfig.height = '70%'
+    this.dialog.open(component, dialogConfig)
+   }
 }

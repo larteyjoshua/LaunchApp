@@ -7,6 +7,9 @@ import { ShowRole } from '../../models/index';
 import { getRoles } from 'src/app/selectors/index.selectors';
 import {Store,select}  from '@ngrx/store';
 import { AppState } from 'src/app/reducers';
+import { DialogService } from 'src/app/services/dialog.service';
+import { FormServicesService } from 'src/app/services/form-services.service';
+import { UserRoleEntryComponent } from '../user-role-entry/user-role-entry.component';
 
 @Component({
   selector: 'app-roles',
@@ -23,10 +26,16 @@ export class RolesComponent implements  OnInit {
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['id', 'name','description', 'dateAdded', 'actions' ];
   searchKey: string ='';
-  constructor(private store: Store<AppState>,) {
-    this.roleList = this.store.pipe(select(getRoles));
 
+  constructor(
+    private store: Store<AppState>,
+    public formService: FormServicesService,
+    private dialogService: DialogService
+    )
+     {
+    this.roleList = this.store.pipe(select(getRoles));
   }
+
   ngOnInit(): void {
     this.roleList.subscribe((data) => {
       if (data){
@@ -53,7 +62,23 @@ export class RolesComponent implements  OnInit {
     this.listData.filter = this.searchKey.trim().toLowerCase();
   }
 
-  onCreate() {}
-  onEdit(row:any){}
-  onDelete($id:number){}
+  onUserRoleCreate() {
+    this.dialogService.UserRoleDialog(UserRoleEntryComponent, 'Create');
+  }
+
+  onUserRoleDelete(){
+    this.dialogService.UserRoleDialog(UserRoleEntryComponent, 'Delete');
+  }
+
+  onUserRoleUpdate(){
+    this.dialogService.UserRoleDialog(UserRoleEntryComponent, 'Update');
+  }
+
+  onEdit(row:any){
+   // this.dialogService.sharedDialog(UserRoleEntryComponent);
+  }
+
+  onDelete(id:number){
+  //  this.dialogService.sharedDialog(UserRoleEntryComponent);
+  }
 }

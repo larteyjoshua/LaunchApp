@@ -27,7 +27,7 @@ import * as AccountPageActions from '../actions/account.actions'
 import * as FoodPageActions from '../actions/food.actions'
 import * as OrderPageActions from '../actions/order.actions'
 import * as UserRoleActions from '../actions/user-role.actions'
-import { createFunction, deleteFunction, updateFunction } from '../utils/app-utils';
+import { createFunction, deleteFunction, updateFunction, updateUserRoleFunction, deleteUserRoleFunction } from '../utils/app-utils';
 
 
 export interface AppState {
@@ -67,6 +67,8 @@ export const initialState: Readonly <AppState> = {
 };
  const _lunchAppReducer = createReducer(
   initialState,
+
+  // =============== Login Reducer =============
   on(LoginPageActions.loadLogins, state =>
     ({
       ...state,
@@ -83,7 +85,11 @@ export const initialState: Readonly <AppState> = {
     ...state,
       error:error,
   }
- )),on(AdminPageActions.loadAdmins, state =>
+ )),
+
+
+  // =============== Admin Reducer =============
+ on(AdminPageActions.loadAdmins, state =>
   ({
     ...state,
     error: state.error
@@ -117,6 +123,9 @@ on(AdminPageActions.loadAdminsFailure, (state, {adminError}) =>
   ...state,
   error: adminError
 })),
+
+
+ // =============== User Reducer =============
 on(UserPageActions.loadUsers, state => ({
   ...state,
   error: state.error
@@ -151,6 +160,8 @@ on(UserPageActions.createUserSuccess, (state, {data}) =>({
   users:createFunction(state.users, data)
 })),
 
+
+ // =============== Company Reducer =============
 on( CompanyPageActions.loadCompanys, state => (
   {
     ...state,
@@ -169,6 +180,26 @@ on(CompanyPageActions.loadCompanysFailure, (state, {error}) => (
     error: error
   }
 )),
+on(CompanyPageActions.deleteCompanySuccess, (state, {data}) =>
+({
+  ...state,
+  companies: deleteFunction(state.companies,data)
+
+})),
+
+on(CompanyPageActions.updateCompanySuccess, (state, {data}) =>
+({
+  ...state,
+  companies: updateFunction(state.companies,data)
+})),
+
+on(CompanyPageActions.createCompanySuccess, (state, {data}) =>({
+  ...state,
+  companies:createFunction(state.companies, data)
+})),
+
+
+ // =============== Rider Reducer =============
 on(RiderPageActions.loadRiders, state => (
   {
     ...state,
@@ -188,6 +219,27 @@ on(RiderPageActions.loadRidersFailure, (state, {error}) => (
 
   }
 )),
+
+on(RiderPageActions.deleteRiderSuccess, (state, {data}) =>
+({
+  ...state,
+  riders: deleteFunction(state.riders,data)
+
+})),
+
+on(RiderPageActions.updateRiderSuccess, (state, {data}) =>
+({
+  ...state,
+  riders: updateFunction(state.riders,data)
+})),
+
+on(RiderPageActions.createRiderSuccess, (state, {data}) =>({
+  ...state,
+  riders:createFunction(state.riders, data)
+})),
+
+
+ // =============== Roles Reducer =============
 on(RolePageActions.loadRoles, state => (
   {
     ...state,
@@ -207,6 +259,9 @@ on(RolePageActions.loadRolesFailure, (state, {error}) => (
 
   }
 )),
+
+
+ // =============== Feedback Reducer =============
 on(FeedbackPageActions.loadFeedbacks, state => ({
   ...state,
   error: state.error
@@ -222,6 +277,9 @@ on(FeedbackPageActions.loadFeedbacksFailure, (state, {error}) =>(
     error:error
   }
 )),
+
+
+ // =============== Account Reducer =============
 on(AccountPageActions.loadAccounts, state => ({
   ...state,
   error: state.error
@@ -237,6 +295,9 @@ on(AccountPageActions.loadAccountsFailure, (state, {error}) =>(
     error:error
   }
 )),
+
+
+ // =============== Food Reducer =============
 on(FoodPageActions.loadFoods, state => ({
   ...state,
   error: state.error
@@ -252,6 +313,9 @@ on(FoodPageActions.loadFoodsFailure, (state, {error}) =>(
     error:error
   }
 )),
+
+
+ // =============== Order Reducer =============
 on(OrderPageActions.loadOrders, state => ({
   ...state,
   error: state.error
@@ -267,6 +331,22 @@ on(OrderPageActions.loadOrdersFailure, (state, {error}) =>(
     error:error
   }
 )),
+
+on(OrderPageActions.deleteOrderSuccess, (state, {data}) =>
+({
+  ...state,
+  orders: deleteFunction(state.orders,data)
+
+})),
+
+on(OrderPageActions.updateOrderSuccess, (state, {data}) =>
+({
+  ...state,
+  orders: updateFunction(state.orders,data)
+})),
+
+
+ // =============== UserRole Reducer =============
 on(UserRoleActions.loadUserRoles, state => ({
   ...state,
   error: state.error
@@ -281,66 +361,27 @@ on(UserRoleActions.loadUserRolesFailure, (state, {error}) =>(
     ...state,
     error:error
   }
-))
+)),
+on(UserRoleActions.deleteUserRoleSuccess, (state, {data}) =>
+({
+  ...state,
+  userRoles: deleteUserRoleFunction(state.userRoles,data)
+
+})),
+
+on(UserRoleActions.updateUserRoleSuccess, (state, {data}) =>
+({
+  ...state,
+  userRoles: updateUserRoleFunction(state.userRoles,data)
+})),
+
+on(UserRoleActions.createUserRoleSuccess, (state, {data}) =>({
+  ...state,
+  userRoles:createFunction(state.userRoles, data)
+})),
 
 );
 
 export function lunchAppReducer(state: AppState, action: Action) {
   return _lunchAppReducer(state, action);
 }
-
-// export const adminReducer = createReducer(
-//   initialState,
-
-// );
-
-// export const userReducer = createReducer(
-//   initialState,
-
-// );
-
-
-// export const companyReducer = createReducer(
-//   initialState,
-
-// );
-
-// export const riderReducer = createReducer(
-//   initialState,
-
-//   );
-
-//   export const roleReducer = createReducer(
-//     initialState,
-
-//   );
-
-
-//   export const feedbackReducer = createReducer(
-//     initialState,
-
-//   );
-
-//   export const accountReducer = createReducer(
-//     initialState,
-
-//   );
-
-//   export const foodReducer = createReducer(
-//     initialState,
-
-//   );
-
-//   export const orderReducer = createReducer(
-//     initialState,
-
-//   );
-
-
-//   export const userRoleReducer = createReducer(
-//     initialState,
-
-//   );
-
-
-

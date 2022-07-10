@@ -72,7 +72,7 @@ async def all(db: Session = Depends(get_db), current_user: schemas.User = Securi
 
 
 @router.put('/company/update/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowCompany, tags = ['Admins', 'Super Admin'])
-async def update(id: int, request: schemas.Company, db: Session = Depends(get_db), current_user: schemas.User = Security(
+async def update(id: int, request: schemas.ShowCompany, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]],
     )):
@@ -134,7 +134,7 @@ async def all(db: Session = Depends(get_db), current_user: schemas.User = Securi
 
 
 @router.put('/userRole/update/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.UserRoleBase, tags = ['Admins', 'Super Admin'])
-async def update(id: int, request: schemas.Role, db: Session = Depends(get_db), current_user: schemas.User = Security(
+async def update(id: int, request: schemas.UserRoleBase, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]],
     )):
@@ -178,6 +178,7 @@ async def create_rider(request: schemas.Rider, db: Session = Depends(get_db), cu
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]],
     )):
+    request.addedBy = current_user.id
     return riders.create(request, db)
 
 @router.get('/rider/{id}', response_model=schemas.ShowRider, tags = ['Admins', 'Order Manager', 'Super Admin'])
@@ -195,8 +196,8 @@ async def all(db: Session = Depends(get_db), current_user: schemas.User = Securi
     return riders.get_all(db)
 
 
-@router.put('/rider/update/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.Rider, tags = ['Admins', 'Order Manager', 'Super Admin'])
-async def update(id: int, request: schemas.Rider, db: Session = Depends(get_db), current_user: schemas.User = Security(
+@router.put('/rider/update/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowRider, tags = ['Admins', 'Order Manager', 'Super Admin'])
+async def update(id: int, request: schemas.ShowRider, db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"],  Role.ADMIN["name"]],
     )):

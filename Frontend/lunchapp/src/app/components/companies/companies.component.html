@@ -42,7 +42,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Is Active</th>
       <td mat-cell *matCellDef="let row">
        <mat-chip-list>
-         <mat-chip color="{{  row.isActive ==='true' ? 'primary' : 'danger'  }}" selected>
+         <mat-chip color="{{  row.isActive ===true ? 'primary' : 'accent'  }}" selected>
            {{row.isActive}}
          </mat-chip>
        </mat-chip-list>
@@ -57,7 +57,7 @@
       <th th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let row">
        <button mat-icon-button (click)="onEdit(row)"><mat-icon>launch</mat-icon></button>
-        <button mat-icon-button color="warn" (click)="onDelete(row.$id)"><mat-icon>delete_outline</mat-icon></button>
+        <button mat-icon-button color="warn" (click)="onDelete(row.id)"><mat-icon>delete_outline</mat-icon></button>
        </td>
     </ng-container>
     <ng-container matColumnDef="noData">

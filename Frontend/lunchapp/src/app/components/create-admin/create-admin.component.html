@@ -24,16 +24,17 @@
 
     <mat-grid-tile>
       <div class="controles-container">
+        <mat-form-field>
+          <input formControlName="password" matInput placeholder="Password*">
+          <mat-error *ngIf="formService.adminForm.controls['password'].errors?.required">This field is mandatory.</mat-error>
+          <mat-error *ngIf="formService.adminForm.controls['password'].errors?.minlength">Minimum 8 charactors needed.</mat-error>
+        </mat-form-field>
         <div class="add-bottom-padding">
           <mat-radio-group formControlName="isActive">isActive
             <mat-radio-button value="1">true</mat-radio-button>
             <mat-radio-button value="2">false</mat-radio-button>
           </mat-radio-group>
-          <mat-form-field>
-            <input formControlName="password" matInput placeholder="Password*">
-            <mat-error *ngIf="formService.adminForm.controls['password'].errors?.required">This field is mandatory.</mat-error>
-            <mat-error *ngIf="formService.adminForm.controls['password'].errors?.minlength">Minimum 8 charactors needed.</mat-error>
-          </mat-form-field>
+
         <div class="button-row">
           <button mat-raised-button color="primary" type="submit" [disabled]="formService.adminForm.invalid">Submit</button>
           <button mat-raised-button color="warn" (click)="onClear()">Clear</button>

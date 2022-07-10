@@ -1,0 +1,42 @@
+<mat-toolbar>
+  <span>{{formService.orderForm.controls['id'].value?"Modify order":"New Order"}}</span>
+  <span class="fill-remaining-space"></span>
+  <button class="btn-dialog-close" mat-stroked-button (click)="onClose()" tabIndex="-1"><mat-icon>clear</mat-icon></button>
+</mat-toolbar>
+
+<form [formGroup]="formService.orderForm" class="normal-form" (submit)="onSubmit()">
+  <mat-grid-list cols="2" rowHeight="300px">
+    <mat-grid-tile>
+      <div class="controles-container">
+        <input type="hidden" formControlName="id">
+        <mat-form-field>
+          <mat-select formControlName="trackingStage" placeholder="Tracking Stage">
+            <mat-option>None</mat-option>
+            <ng-container *ngFor="let stage of stages">
+              <mat-option value="{{stage}}">{{stage}}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div class="controles-container">
+        <mat-form-field>
+          <mat-select formControlName="riderId" placeholder="Rider">
+            <mat-option>None</mat-option>
+            <ng-container *ngFor="let rider of listRiders">
+              <mat-option value="{{rider.id}}">{{rider.name}}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+        <div class="add-bottom-padding">
+
+        <div class="button-row">
+          <button mat-raised-button color="primary" type="submit" [disabled]="formService.orderForm.invalid">Submit</button>
+          <button mat-raised-button color="warn" (click)="onClear()">Clear</button>
+        </div>
+        </div>
+        </div>
+    </mat-grid-tile>
+  </mat-grid-list>
+</form>

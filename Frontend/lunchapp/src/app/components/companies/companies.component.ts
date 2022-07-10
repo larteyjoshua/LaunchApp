@@ -1,3 +1,4 @@
+import { CompanyEntryComponent } from './../company-entry/company-entry.component';
 import { AfterViewInit, Component, ViewChild, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -9,6 +10,11 @@ import { CompaniesDataSource, CompaniesItem } from './companies-datasource';
 import { select, Store } from '@ngrx/store'
 import { getCompanies } from 'src/app/selectors/index.selectors';
 import { AppState } from 'src/app/reducers';
+import { deleteAdmin } from 'src/app/actions/admin.actions';
+import { DialogService } from 'src/app/services/dialog.service';
+import { FormServicesService } from 'src/app/services/form-services.service';
+import { CreateAdminComponent } from '../create-admin/create-admin.component';
+import { deleteCompany } from '../../actions/company.actions';
 
 @Component({
   selector: 'app-companies',
@@ -34,7 +40,11 @@ export class CompaniesComponent implements OnInit {
     'actions'
    ];
   searchKey: string='';
-  constructor(  private store: Store<AppState>,) {
+  constructor(
+    private store: Store<AppState>,
+    private dialogService: DialogService,
+    public formService: FormServicesService,
+    ) {
     this.companyList = this.store.pipe(select(getCompanies));
   }
   ngOnInit(): void {
@@ -63,7 +73,32 @@ export class CompaniesComponent implements OnInit {
     this.listData.filter = this.searchKey.trim().toLowerCase();
   }
 
-  onCreate() {}
-  onEdit(row:any){}
-  onDelete($id:number){}
+  onCreate() {
+    this.dialogService.sharedDialog(CompanyEntryComponent);
+  }
+
+  onEdit(row:any){
+    let updateCompany:any = {
+      "id":row.id,
+      "name":row.name,
+      "email": row.email,
+      "isActive": row.isActive==true? '1':'2',
+      "phoneNumber":row.phoneNumber,
+      "location": row.location,
+      "dateAdded": row.dateAdded
+     }
+     console.log(updateCompany, '____row')
+    this.formService.populateCompanyForm(updateCompany);
+    this.dialogService.sharedDialog(CompanyEntryComponent);
+  }
+
+  onDelete(id:number){
+    console.log('id', id)
+    this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
+    .afterClosed().subscribe(res =>{
+      if(res){
+      this.store.dispatch(deleteCompany({id:id}));
+      }
+    });
+  }
 }

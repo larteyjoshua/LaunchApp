@@ -158,7 +158,7 @@ class Feedback(BaseModel):
         orm_mode = True
         
 class ShowFeedback(BaseModel):
-    id:int
+    id: int
     foodId: int
     comment: str
     stars: int
@@ -202,8 +202,10 @@ class TokenData(BaseModel):
     email: Optional[str] = None
     
 class UserRoleBase(BaseModel):
-    user_id: Optional[int] = None
-    role_id: Optional[int] = None
+    user_id: int = None
+    role_id: int = None
+    class Config:
+        orm_mode = True
     
 class Msg(BaseModel):
     msg: str

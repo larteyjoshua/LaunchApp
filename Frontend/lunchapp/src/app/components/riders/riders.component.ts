@@ -5,7 +5,11 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from 'src/app/reducers';
+import { DialogService } from 'src/app/services/dialog.service';
+import { FormServicesService } from 'src/app/services/form-services.service';
 import {getRidersWithDetails} from '../../selectors/index.selectors'
+import { RiderEntryComponent } from '../rider-entry/rider-entry.component';
+import { deleteRider } from '../../actions/rider.actions';
 
 @Component({
   selector: 'app-riders',
@@ -24,11 +28,15 @@ export class RidersComponent implements OnInit {
    'motorNumber',
     'tellNumber',
     'dateAdded',
-    'addedby',
+    'addedBy',
      'actions'];
   searchKey: string ='';
 
-  constructor(private store: Store<AppState>,) {
+  constructor(
+    private store: Store<AppState>,
+    public formService: FormServicesService,
+    private dialogService: DialogService
+  ) {
     this.ridersList = this.store.pipe(select(getRidersWithDetails));
   }
   ngOnInit(): void {
@@ -52,7 +60,32 @@ applyFilter() {
   this.listData.filter = this.searchKey.trim().toLowerCase();
 }
 
-onCreate() {}
-onEdit(row:any){}
-onDelete($id:number){}
+onCreate() {
+  this.dialogService.sharedDialog(RiderEntryComponent);
+}
+onEdit(row:any){
+  console.log('.............', row)
+  // let updateUser:any = {
+  //   "id":row.id,
+  //   "fullName":row.fullName,
+  //   "email": row.email,
+  //   "isActive": row.isActive==true? '1':'2',
+  //   "password":'',
+  //   "companyId": castId
+  //  }
+  row.addedBy = 0
+   console.log(row, '____row')
+  this.formService.populateRiderForm(row);
+  this.dialogService.sharedDialog(RiderEntryComponent);
+}
+
+onDelete(id:number){
+  console.log('id', id)
+  this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
+  .afterClosed().subscribe(res =>{
+    if(res){
+    this.store.dispatch(deleteRider({id:id}));
+    }
+  });
+}
 }

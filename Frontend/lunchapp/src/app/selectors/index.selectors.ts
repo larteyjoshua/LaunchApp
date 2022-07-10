@@ -163,7 +163,7 @@ export const getRidersWithDetails = createSelector(
            motorNumber:a.motorNumber,
            tellNumber: a.tellNumber,
            dateAdded: a.dateAdded,
-           addedby: a.fullName
+           addedBy: a.fullName
           }
       });
     }
@@ -324,7 +324,7 @@ export const getDashashboardSummaryData = createSelector(
     }
     summay.push(OrderDetails);
 
-    const totalOrderDelivered = (orders.filter(data => data.trackingStage === 'deliverd')).length;
+    const totalOrderDelivered = (orders.filter(data => data.trackingStage === 'delivered')).length;
     const retriveOrderDevliveredNumber = localStorage.getItem('orderTotalDelivered');
     localStorage.setItem('orderTotalDelivered',String(totalOrderDelivered))
 

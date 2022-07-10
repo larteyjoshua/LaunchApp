@@ -17,6 +17,7 @@ import * as FoodPageActions from '../actions/food.actions'
 import * as OrderPageActions from '../actions/order.actions'
 import * as UserRolePageActions from '../actions/user-role.actions'
 import * as CoreActions from '../actions/app.actions'
+import { deleteRiderSuccess } from '../actions/rider.actions';
 
 
 @Injectable()
@@ -132,6 +133,31 @@ export class AppEffects {
   ));
 
 
+  createCompany$ = createEffect(() => this.actions$.pipe(
+    ofType(CompanyPageActions.createCompany),
+    concatMap((action) => this.apiService.createCompany(action.data).pipe(
+      map((response) =>CompanyPageActions.createCompanySuccess({data:response})),
+      catchError(error => of(CoreActions.deplayFailure({response:error})))
+    ))
+  ));
+
+  updateCompany$ =createEffect(() => this.actions$.pipe(
+    ofType(CompanyPageActions.updateCompany),
+    concatMap((action) => this.apiService.updateCompany(action.id,action.data).pipe(
+      map((response) => CompanyPageActions.updateCompanySuccess({data:response})),
+      catchError(error => of(CoreActions.deplayFailure({response:error})))
+    ))
+  ));
+
+  deleteCompany$ =createEffect(() => this.actions$.pipe(
+    ofType(CompanyPageActions.deleteCompany),
+    mergeMap((action) => this.apiService.deleteCompany(action.id).pipe(
+      map((response) => CompanyPageActions.deleteCompanySuccess({data:response})),
+      catchError(error => of(CoreActions.deplayFailure({response:error})))
+    ))
+  ));
+
+
 // ==============Riders Effects================
   loadRiders$ = createEffect(()=> this.actions$.pipe(
     ofType(RiderPageActions.loadRiders),
@@ -141,6 +167,29 @@ export class AppEffects {
     ))
   ));
 
+  createRider$ = createEffect(() => this.actions$.pipe(
+    ofType(RiderPageActions.createRider),
+    concatMap((action) => this.apiService.createRider(action.data).pipe(
+      map((response) =>RiderPageActions.createRiderSuccess({data:response})),
+      catchError(error => of(CoreActions.deplayFailure({response:error})))
+    ))
+  ));
+
+  updateRider$ =createEffect(() => this.actions$.pipe(
+    ofType(RiderPageActions.updateRider),
+    concatMap((action) => this.apiService.updateRider(action.id,action.data).pipe(
+      map((response) => RiderPageActions.updateRiderSuccess({data:response})),
+      catchError(error => of(CoreActions.deplayFailure({response:error})))
+    ))
+  ));
+
+  deleteRider$ =createEffect(() => this.actions$.pipe(
+    ofType(RiderPageActions.deleteRider),
+    mergeMap((action) => this.apiService.deleteRider(action.id).pipe(
+      map((response) => RiderPageActions.deleteRiderSuccess({data:response})),
+      catchError(error => of(CoreActions.deplayFailure({response:error})))
+    ))
+  ));
 
 // ==============Role Effects================
   loadRoles$ = createEffect(()=> this.actions$.pipe(
@@ -190,6 +239,21 @@ export class AppEffects {
       catchError(error => of(OrderPageActions.loadOrdersFailure({error:error})))
     ))
   ));
+  updateOrder$ =createEffect(() => this.actions$.pipe(
+    ofType(OrderPageActions.updateOrder),
+    concatMap((action) => this.apiService.updateOrder(action.id,action.data).pipe(
+      map((response) => OrderPageActions.updateOrderSuccess({data:response})),
+      catchError(error => of(CoreActions.deplayFailure({response:error})))
+    ))
+  ));
+
+  deleteOrder$ =createEffect(() => this.actions$.pipe(
+    ofType(OrderPageActions.deleteOrder),
+    mergeMap((action) => this.apiService.deleteOrder(action.id).pipe(
+      map((response) => OrderPageActions.deleteOrderSuccess({data:response})),
+      catchError(error => of(CoreActions.deplayFailure({response:error})))
+    ))
+  ));
 
 
 // ==============UserRole Effects================
@@ -202,6 +266,32 @@ export class AppEffects {
       ))
     )
   );
+
+
+  createUserRole$ = createEffect(() => this.actions$.pipe(
+    ofType(UserRolePageActions.createUserRole),
+    concatMap((action) => this.apiService.createUserRole(action.data).pipe(
+      map((response) =>UserRolePageActions.createUserRoleSuccess({data:response})),
+      catchError(error => of(CoreActions.deplayFailure({response:error})))
+    ))
+  ));
+
+  updateUserRole$ =createEffect(() => this.actions$.pipe(
+    ofType(UserRolePageActions.updateUserRole),
+    concatMap((action) => this.apiService.updateUserRole(action.id,action.data).pipe(
+      map((response) => UserRolePageActions.updateUserRoleSuccess({data:response})),
+      catchError(error => of(CoreActions.deplayFailure({response:error})))
+    ))
+  ));
+
+  deleteUserRole$ =createEffect(() => this.actions$.pipe(
+    ofType(UserRolePageActions.deleteUserRole),
+    mergeMap((action) => this.apiService.deleteUserRole(action.user_id).pipe(
+      map((response) => UserRolePageActions.deleteUserRoleSuccess({data:response})),
+      catchError(error => of(CoreActions.deplayFailure({response:error})))
+    ))
+  ));
+
 
   constructor
   (

@@ -25,7 +25,7 @@ def get_all(db: Session):
     return roles
 
 def destroy(id: int, db: Session):
-    role = db.query(models.UserRole).filter(models.UserRole.role_id == id).first()
+    role = db.query(models.UserRole).filter(models.UserRole.user_id == id).first()
     if not role:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"User Role with id {id} not found")
@@ -35,7 +35,7 @@ def destroy(id: int, db: Session):
 
 
 def update(id: int, request: schemas.UserRoleBase, db: Session):
-    role = db.query(models.UserRole).filter(models.UserRole.role_id == id).first()
+    role = db.query(models.UserRole).filter(models.UserRole.user_id == id).first()
     if not role:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f" User Role with id {id} not found")

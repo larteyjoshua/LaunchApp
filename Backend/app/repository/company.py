@@ -42,7 +42,7 @@ def destroy(id: int, db: Session):
     db.commit()
     return company
 
-def update(id: int, request: schemas.Company, db: Session):
+def update(id: int, request: schemas.ShowCompany, db: Session):
     company = db.query(models.Company).filter(models.Company.id == id).first()
     if not company:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,

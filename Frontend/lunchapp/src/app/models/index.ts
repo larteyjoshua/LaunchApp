@@ -166,3 +166,10 @@ export interface UserRole {
   user_id: number;
   role_id: number;
 }
+
+
+export enum UserRoleActions {
+  'update'= 'Update',
+  'create' = 'Create',
+  'delete' = 'Delete'
+}

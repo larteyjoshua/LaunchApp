@@ -5,6 +5,7 @@ import { select, Store } from '@ngrx/store';
 import { AppState } from 'src/app/reducers';
 import { Observable } from 'rxjs/internal/Observable';
 import {getHighestOrderPerday , getFoodOrderList, getTodaysOrder, getDashashboardSummaryData  } from '../../selectors/index.selectors';
+import { loadOrders } from 'src/app/actions/order.actions';
 
 @Component({
   selector: 'app-dashboard',
@@ -55,6 +56,7 @@ export class DashboardComponent implements OnInit {
 
     }
   ngOnInit(): void {
+    this.store.dispatch(loadOrders());
   this.groupFoodList.subscribe(data => {
     // console.log('data receive', data)
     this.foodOredered = data;

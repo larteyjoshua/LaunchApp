@@ -1,0 +1,46 @@
+<mat-toolbar>
+  <span>{{formService.riderForm.controls['id'].value?"Modify Rider":"New Rider"}}</span>
+  <span class="fill-remaining-space"></span>
+  <button class="btn-dialog-close" mat-stroked-button (click)="onClose()" tabIndex="-1"><mat-icon>clear</mat-icon></button>
+</mat-toolbar>
+
+<form [formGroup]="formService.riderForm" class="normal-form" (submit)="onSubmit()">
+
+  <mat-grid-list cols="2" rowHeight="300px">
+
+    <mat-grid-tile>
+      <div class="controles-container">
+        <input type="hidden" formControlName="id">
+        <mat-form-field>
+          <input formControlName="name" matInput placeholder="Full Name*">
+          <mat-error>This field is mandatory.</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input formControlName="email" matInput placeholder="Email">
+          <mat-error>Invalid email address.</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input formControlName="tellNumber" matInput placeholder="Tell Number">
+          <mat-error>Incorrect Tell Phone Number.</mat-error>
+        </mat-form-field>
+        <input type="hidden" formControlName="addedBy">
+      </div>
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <div class="controles-container">
+        <mat-form-field>
+          <input formControlName="motorNumber" matInput placeholder="Motor Number">
+          <mat-error>invalid.</mat-error>
+        </mat-form-field>
+        <div class="add-bottom-padding">
+
+        <div class="button-row">
+          <button mat-raised-button color="primary" type="submit" [disabled]="formService.riderForm.invalid">Submit</button>
+          <button mat-raised-button color="warn" (click)="onClear()">Clear</button>
+        </div>
+      </div>
+      </div>
+    </mat-grid-tile>
+  </mat-grid-list>
+</form>

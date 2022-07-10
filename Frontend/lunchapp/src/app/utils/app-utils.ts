@@ -26,5 +26,16 @@ export const deleteFunction = (items:any[], item:any)=> items.filter(oldItem =>
 
 
   export const findItemId =(items:any[],key:any) =>items.find(item =>{
-   return item.name === key
-  })
+    console.log(key, items)
+   return item.name ||item.id === key
+  });
+
+  export const updateUserRoleFunction = (items:any[], changeItem:any) => items.map(item => {
+    return item.user_id === changeItem.user_id? Object.assign({},item, changeItem): item
+  });
+  export const deleteUserRoleFunction = (items:any[], item:any)=> items.filter(oldItem =>
+    oldItem.user_id !== item.user_id);
+
+    export const findUserRole =(items:any[],key:any) =>items.find(item =>{
+      return item.role_id ||item.role_id === key
+     });

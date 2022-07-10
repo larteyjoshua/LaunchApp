@@ -14,6 +14,7 @@ import { deleteUser } from '../../actions/user.actions';
 import { findItemId } from 'src/app/utils/app-utils';
 import { ShowCompany } from 'src/app/models';
 import { ShowUser } from '../../models/index';
+import { BulkUserEntryComponent } from '../bulk-user-entry/bulk-user-entry.component';
 
 
 @Component({
@@ -82,6 +83,10 @@ export class UsersComponent implements OnInit {
 
   onCreate() {
     this.dialogService.sharedDialog(UserEntryComponent);
+  }
+
+  onBulkUsersCreate() {
+    this.dialogService.BulkUsersCreatetionDialog(BulkUserEntryComponent);
   }
 
   onEdit(row:any){

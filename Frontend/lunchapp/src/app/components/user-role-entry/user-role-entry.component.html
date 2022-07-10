@@ -1,0 +1,42 @@
+<p>user-role-entry works!</p>
+<mat-toolbar>
+  <span>{{data.action}} User Role</span>
+  <span class="fill-remaining-space"></span>
+  <button class="btn-dialog-close" mat-stroked-button (click)="onClose()" tabIndex="-1"><mat-icon>clear</mat-icon></button>
+</mat-toolbar>
+
+<form [formGroup]="formService.userRoleForm" class="normal-form" (submit)="onSubmit()">
+  <mat-grid-list cols="2" rowHeight="300px">
+    <mat-grid-tile>
+      <div class="controles-container">
+        <mat-form-field>
+          <mat-select formControlName="user_id" placeholder="Name">
+            <mat-option>None</mat-option>
+            <ng-container *ngFor="let admin of listAdmins">
+              <mat-option value="{{admin.id}}">{{admin.fullName}}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div class="controles-container">
+        <mat-form-field>
+          <mat-select formControlName="role_id" placeholder="Role Name">
+            <mat-option>None</mat-option>
+            <ng-container *ngFor="let role of listRoles">
+              <mat-option value="{{role.id}}">{{role.name}}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+        <div class="add-bottom-padding">
+
+        <div class="button-row">
+          <button mat-raised-button color="primary" type="submit" [disabled]="formService.userRoleForm.invalid">Submit</button>
+          <button mat-raised-button color="warn" (click)="onClear()">Clear</button>
+        </div>
+        </div>
+        </div>
+    </mat-grid-tile>
+  </mat-grid-list>
+</form>

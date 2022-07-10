@@ -74,7 +74,7 @@ class Food(Base):
 class Order(Base):
     __tablename__ = 'orders'
     id = Column(Integer, primary_key=True, index=True)
-    orderDate = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    orderDate = Column(DateTime, default=datetime.now)
     foodId = Column(Integer, ForeignKey('foods.id'))
     companyId = Column(Integer, ForeignKey('company.id'))
     cost = Column(Float)

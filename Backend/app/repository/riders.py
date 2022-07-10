@@ -41,7 +41,7 @@ def destroy(id: int, db: Session):
     db.commit()
     return rider
 
-def update(id: int, request: schemas.Rider, db: Session):
+def update(id: int, request: schemas.ShowRider, db: Session):
     rider = db.query(models.Rider).filter(models.Rider.id == id).first()
     if not rider:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -51,7 +51,6 @@ def update(id: int, request: schemas.Rider, db: Session):
     rider.emal = request.email
     rider.tellNumber = request.tellNumber
     rider.motorNumber = request.motorNumber
-    rider.addedBy = request.addedBy
     db.commit()
     db.refresh(rider)
     return rider

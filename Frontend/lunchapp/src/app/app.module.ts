@@ -52,6 +52,13 @@ import { FeedbackDisplayCardComponent } from './components/feedback-display-card
 import { CreateAdminComponent } from './components/create-admin/create-admin.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { UserEntryComponent } from './components/user-entry/user-entry.component';
+import { CompanyEntryComponent } from './components/company-entry/company-entry.component';
+import { BulkUserEntryComponent } from './components/bulk-user-entry/bulk-user-entry.component';
+import { UserRoleEntryComponent } from './components/user-role-entry/user-role-entry.component';
+import { RiderEntryComponent } from './components/rider-entry/rider-entry.component';
+import { FoodEntryComponent } from './components/food-entry/food-entry.component';
+import { OrderEntryComponent } from './components/order-entry/order-entry.component';
+import { AccountEntryComponent } from './components/account-entry/account-entry.component';
 
 
 
@@ -82,7 +89,14 @@ import { UserEntryComponent } from './components/user-entry/user-entry.component
     FeedbackDisplayCardComponent,
     CreateAdminComponent,
     ConfirmDialogComponent,
-    UserEntryComponent
+    UserEntryComponent,
+    CompanyEntryComponent,
+    BulkUserEntryComponent,
+    UserRoleEntryComponent,
+    RiderEntryComponent,
+    FoodEntryComponent,
+    OrderEntryComponent,
+    AccountEntryComponent
 
   ],
   imports: [
@@ -116,7 +130,14 @@ import { UserEntryComponent } from './components/user-entry/user-entry.component
   entryComponents:[
     CreateAdminComponent,
     ConfirmDialogComponent,
-    UserEntryComponent
+    UserEntryComponent,
+    CompanyEntryComponent,
+    BulkUserEntryComponent,
+    RiderEntryComponent,
+    RiderEntryComponent,
+    FoodEntryComponent,
+    OrderEntryComponent,
+    AccountEntryComponent
 
    ],
   providers: [ApiServicesService],
