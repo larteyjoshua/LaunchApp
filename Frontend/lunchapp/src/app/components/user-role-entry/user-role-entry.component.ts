@@ -72,23 +72,22 @@ export class UserRoleEntryComponent implements OnInit {
 
   onSubmit() {
     if (this.formService.userRoleForm.valid) {
+      console.log('formData', this.formService.userRoleForm.value);
+      const userRole = {... this.formService.userRoleForm.value}
+      userRole.user_id =  userRole.user_id? Number( userRole.user_id): null
+      userRole.role_id =  userRole.role_id? Number( userRole.role_id): null
+
+      const admin = findItemId( this.listAdmins,
+        userRole.user_id)
+        console.log('admin', admin)
+
+        const role =this.listRoles.find(item =>{
+         return item.id === userRole.role_id
+        });
+
+          console.log('role', role,)
+
       if (this.message === UserRoleActions.create){
-        console.log('create formData', this.formService.userRoleForm.value);
-
-        const userRole = {... this.formService.userRoleForm.value}
-        userRole.user_id =  userRole.user_id? Number( userRole.user_id): null
-        userRole.role_id =  userRole.role_id? Number( userRole.role_id): null
-
-        const admin = findItemId( this.listAdmins,
-          userRole.user_id)
-          console.log('admin', admin)
-
-          const role =this.listRoles.find(item =>{
-           return item.id === userRole.role_id
-          });
-
-            console.log('role', role,)
-
             const message = 'Are you sure you want to assign Role '
              + role.name + ' to  ' + admin.fullName + '?';
 
@@ -103,25 +102,8 @@ export class UserRoleEntryComponent implements OnInit {
              });
       }
       else if ( this.message === UserRoleActions.update){
-
-        console.log('update formData', this.formService.userRoleForm.value);
-        const userRole = {... this.formService.userRoleForm.value}
-        userRole.user_id =  userRole.user_id? Number( userRole.user_id): null
-        userRole.role_id =  userRole.role_id? Number( userRole.role_id): null
-
-        const admin = findItemId( this.listAdmins,
-          userRole.user_id)
-          console.log('admin', admin)
-
-          const role =this.listRoles.find(item =>{
-           return item.id === userRole.role_id
-          });
-
-            console.log('role', role,)
-
             const message = 'Are you sure you want to assign Role '
              + role.name + ' to  ' + admin.fullName + '?';
-
              this.dialogService.openConfirmDialog(message)
              .afterClosed().subscribe(res =>{
                if(res){
@@ -134,22 +116,6 @@ export class UserRoleEntryComponent implements OnInit {
              });
       }
       else if ( this.message === UserRoleActions.delete) {
-        console.log('delete formData', this.formService.userRoleForm.value);
-
-        const userRole = {... this.formService.userRoleForm.value}
-        userRole.user_id =  userRole.user_id? Number( userRole.user_id): null
-        userRole.role_id =  userRole.role_id? Number( userRole.role_id): null
-
-        const admin = findItemId( this.listAdmins,
-          userRole.user_id)
-          console.log('admin', admin)
-
-          const role =this.listRoles.find(item =>{
-           return item.id === userRole.role_id
-          });
-
-            console.log('role', role,)
-
             const message = 'Are you sure you want to delete Role '
              + role.name + ' assign to  ' + admin.fullName + '?';
 

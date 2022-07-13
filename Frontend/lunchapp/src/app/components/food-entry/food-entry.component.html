@@ -1,1 +1,59 @@
-<p>food-entry works!</p>
+<mat-toolbar>
+  <span>{{formService.foodForm.value.id?"Modify Food":"New Food"}}</span>
+  <span class="fill-remaining-space"></span>
+  <button class="btn-dialog-close" mat-stroked-button (click)="onClose()" tabIndex="-1"><mat-icon>clear</mat-icon></button>
+</mat-toolbar>
+
+
+<form [formGroup]="formService.foodForm" class="normal-form" (submit)="onSubmit()">
+
+
+
+  <mat-grid-list cols="2" rowHeight="300px">
+    <mat-grid-tile>
+      <div class="controles-container">
+        <input type="hidden" formControlName="id">
+
+        <mat-form-field>
+          <input formControlName="name" matInput placeholder="Food Name*">
+          <mat-error>This field is mandatory.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input formControlName="ingredients" matInput placeholder="Made Up">
+          <mat-error>Invalid Ingredients List .</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input formControlName="price" matInput placeholder="Price">
+          <mat-error>Invalid Price.</mat-error>
+        </mat-form-field>
+
+        <div class="form-group">
+          <label for="file">File</label>
+          <input type="file" class="form-control" id="file" formControlName="imagePath" (change)="onImageChange($event)">
+
+
+        </div>
+
+      </div>
+
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div class="controles-container">
+
+        <div class="preview" *ngIf="imgFile|| imgPath">
+          <img [src]="imgFile || imgPath" style="width:200px; height:150px">
+        </div>
+
+        <div class="add-bottom-padding">
+        <div class="button-row">
+          <button mat-raised-button color="primary" type="submit" [disabled]="formService.foodForm.invalid">Submit</button>
+          <button mat-raised-button color="warn" (click)="onClear()">Clear</button>
+        </div>
+      </div>
+      </div>
+    </mat-grid-tile>
+
+  </mat-grid-list>
+</form>

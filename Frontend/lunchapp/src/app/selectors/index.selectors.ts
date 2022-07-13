@@ -67,6 +67,20 @@ export const getAccounts = createSelector(
   (state) => state.accounts
 );
 
+export const getError = createSelector(
+  getAppState,
+  (state) => state.fileUploadError
+)
+
+export const getStatus = createSelector(
+  getAppState,
+  (state) => state.status
+)
+
+export const getInProgress = createSelector(
+  getAppState,
+  (state) => state.progress
+)
 export const getAdminsDetails = createSelector(
   getAdmins,
   getUserRole,

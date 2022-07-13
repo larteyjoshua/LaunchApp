@@ -7,7 +7,8 @@ from app.utils import schemas
 def create(request: schemas.Food, db: Session, current_user): 
         food = db.query(models.Food).filter(models.Food.id == request.foodId).first()
         if current_user.companyId is None:
-           return{"info": f"Update your profile with Company"}
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail = f"Update your profile with Company") 
         else: 
             company = db.query(models.Company).filter(models.Company.id == current_user.companyId).first() 
             new_order = models.Order(foodId=request.foodId, 

@@ -32,7 +32,9 @@
     "chart.js": "^2.9.3",
     "loadash": "^1.0.0",
     "ng2-charts": "^2.4.2",
+    "ngx-toastr": "^14.3.0",
     "rxjs": "~6.6.0",
+    "serialize-error": "^8.1.0",
     "tslib": "^2.1.0",
     "zone.js": "~0.11.4"
   },

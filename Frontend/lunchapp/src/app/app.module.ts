@@ -59,7 +59,7 @@ import { RiderEntryComponent } from './components/rider-entry/rider-entry.compon
 import { FoodEntryComponent } from './components/food-entry/food-entry.component';
 import { OrderEntryComponent } from './components/order-entry/order-entry.component';
 import { AccountEntryComponent } from './components/account-entry/account-entry.component';
-
+import { ToastrModule } from 'ngx-toastr';
 
 
 
@@ -124,7 +124,12 @@ import { AccountEntryComponent } from './components/account-entry/account-entry.
      StoreModule.forFeature('lunch',lunchAppReducer),
      !environment.production ? StoreDevtoolsModule.instrument() : [],
      EffectsModule.forRoot([AppEffects]),
-     ChartsModule
+     ChartsModule,
+     ToastrModule.forRoot({
+      timeOut: 10000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    })
 
   ],
   entryComponents:[

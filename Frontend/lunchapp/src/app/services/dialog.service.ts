@@ -31,6 +31,18 @@ export class DialogService {
     this.dialog.open(component, dialogConfig)
    }
 
+   foodDialog(component: any, imagePath: any){
+    const dialogConfig= new MatDialogConfig();
+    dialogConfig.disableClose =true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '60%'
+    dialogConfig.height = '60%'
+    dialogConfig.data ={
+      imagePath : imagePath
+    }
+    this.dialog.open(component, dialogConfig)
+   }
+
    UserRoleDialog(component: any, action:any){
     const dialogConfig= new MatDialogConfig();
     dialogConfig.disableClose =true;

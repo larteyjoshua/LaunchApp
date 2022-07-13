@@ -1,4 +1,3 @@
-import { TypeQueryNode } from "typescript";
 
 export interface UserLoginDetail {
   username: string,
@@ -62,17 +61,19 @@ export interface ShowUser {
 }
 
 export interface CreateFood {
+  id?:number
   name: string;
-  ingedients: string;
-  price: number;
-  addedBy: string;
-  imagePath: string;
+  ingredients: string;
+  price: string;
+  addedBy?: string;
+  imagePath: File;
 }
+
 
 export interface ShowFood {
   id: number;
   name: string;
-  ingedients: string;
+  ingredients: string;
   dateAdded: Date;
   price: number;
   addedBy: number;
@@ -173,3 +174,12 @@ export enum UserRoleActions {
   'create' = 'Create',
   'delete' = 'Delete'
 }
+
+export enum UploadStatus {
+  Ready = 'Ready',
+  Requested = 'Requested',
+  Started = 'Started',
+  Failed = 'Failed',
+  Completed = 'Completed'
+}
+

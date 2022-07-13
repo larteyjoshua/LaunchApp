@@ -7,7 +7,8 @@ from app.utils import schemas
 def create(request: schemas.Role, db: Session):
     role = db.query(models.Role).filter(models.Role.name == request.name).first()
     if role:
-        return{"info": f"Role with the name {request.name} already exist"}
+        raise HTTPException(status_code= 303,
+                            detail =f"Role with the email { request.name} already exist")
     else: 
         new_role = models.Role(name=request.name, description = request.description)
         db.add(new_role)

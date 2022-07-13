@@ -1,4 +1,6 @@
 import csv
+from app.utils.schemas import DictReaderStrip
+from app.repository.users import createBulk
 from app.utils.schemas import User
 from fastapi import APIRouter, Depends, status, Security, UploadFile, Form, File
 from app.models import  models
@@ -209,14 +211,14 @@ async def update(id: int, request: schemas.ShowRider, db: Session = Depends(get_
 @router.post('/food/add', tags = ['Admins', 'Super Admin' ])
 async def create_food(name: str= Form(...),
            ingredients: str = Form(...),
-            price: float = Form(...),
+            price: str = Form(...),
             imagePath:  UploadFile = File(...),
             db: Session = Depends(get_db), current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"], Role.ADMIN["name"]],
     )):
     
-    food = schemas.Food(name = name, ingredients =ingredients, price = price, addedBy =current_user.id)
+    food = schemas.Food(name = name, ingredients =ingredients, price = float(price), addedBy =current_user.id)
     food.imagePath = await handle_file_upload(imagePath, name)
     return foods.create(food, db)
 
@@ -238,14 +240,14 @@ async def all(db: Session = Depends(get_db), current_user: schemas.User = Securi
 @router.put('/food/update/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.Food,  tags = ['Admins', 'Super Admin'])
 async def update(id: int, name: str= Form(...),
            ingredients: str = Form(...),
-            price: float = Form(...),
+            price: str = Form(...),
             imagePath:  UploadFile = File(...),
             db: Session = Depends(get_db), 
             current_user: schemas.User = Security(
         oauth2.get_current_active_user,
         scopes=[Role.SUPER_ADMIN["name"], Role.ADMIN["name"]],
     )):
-    food = schemas.Food(name = name, ingredients =ingredients, price = price, addedBy =current_user.id)
+    food = schemas.Food(name = name, ingredients =ingredients, price = float(price), addedBy =current_user.id)
     food.imagePath = await handle_file_upload(imagePath, name)
     return foods.update(id, food, db)
 
@@ -326,7 +328,7 @@ async def get_feedback_by_food(foodId: int, db: Session = Depends(get_db), curre
     )):
     return feedbacks.show_by_food(foodId, db)
 
-@router.post('/bulk_users/csv', tags = ['Admins', 'Super Admin' ], response_model=List[schemas.ShowUser])
+@router.post('/bulk_users/csv', tags = ['Admins', 'Super Admin' ])
 async def create_bulk_user(
         name: str = Form(...),
         csvFile: UploadFile = File(...),
@@ -337,18 +339,9 @@ async def create_bulk_user(
     )):
     print(name)
     print(csvFile.content_type)
+   
     # df = pd.DataFrame(pd.read_excel(csvFile.file, encoding ='ISO-8859-1'))
-    readInputFile = csv.DictReader(codecs.iterdecode(csvFile.file,'ISO-8859-1'))
-    counter = 0
-    userBulk = []
-    for row in readInputFile:
-        try:
-            counter = counter + 1
-            print(row)
-            print(row['Name'], row['Email'])
-            userRow = schemas.BulkUser(fullName = row['Name'],  email = row['Email'])
-            addedUser = users.createBulk(userRow, name, db)
-            userBulk.append(addedUser)
-        except Exception as e:
-            return {"error": f" Oops!, {e.__class__,} occured"}
-    return userBulk
+    readInputFile = csv.DictReader(codecs.iterdecode(csvFile.file,'ISO-8859-1'),skipinitialspace= True, delimiter="," )
+
+    return createBulk(readInputFile, name, db)
+  

@@ -15,9 +15,11 @@ def create(request: schemas.User, db: Session):
     user = db.query(models.User).filter(models.User.email == request.email).first()
     company = db.query(models.Company).filter(models.Company.id ==request.companyId).first()
     if user:
-        return{"info": f"User with the email {request.email} already exist"}
+       raise HTTPException(status_code= 303,
+                            detail =f"User with the email { request.email} already exist")
     elif not company:
-         return{"info": f"Company with the id {request.companyId} does not exist"}
+         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail =f"Company with the id {request.companyId} does not exist") 
     else: 
         new_user = models.User(fullName=request.fullName, email=request.email, password=Hash.bcrypt(request.password), companyId =request.companyId)
         db.add(new_user)
@@ -124,39 +126,68 @@ def passwordReset(token: str, new_password: str, db: Session):
         )
     elif not is_active(user):
         raise HTTPException(status_code=400, detail="Inactive user")
-    
-
     user.paaword = Hash.bcrypt(new_password)
     db.add(user)
     db.commit()
     return {"msg": "Password updated successfully"}
+    
 
-def createBulk(request: schemas.BulkUser, companyName:str, db: Session):
-    user = db.query(models.User).filter(models.User.email == request.email).first()
-    company = db.query(models.Company).filter(models.Company.name == companyName).first()
-    if user:
-        return{"info": f"User with the email {request.email} already exist"}
-    elif not company:
-         return{"info": f"Company with the Name: {companyName} does not exist"}
-    else: 
-        lower = string.ascii_lowercase
-        upper = string.ascii_uppercase
-        num = string.digits
-        symbols = string.punctuation
-        all = lower + upper + num + symbols
-        temp = random.sample(all,12)
-        generatePassword = "".join(temp)
-        print(generatePassword)
+def createBulk(rows, companyName:str, db: Session):
+   
+    print(companyName)
+    name =companyName.split(".")
+    print(name)
 
-        new_user = models.User(
-            fullName=request.fullName,
-             email=request.email, 
-             password=Hash.bcrypt(generatePassword), 
-             companyId =company.id)
-        db.add(new_user)
-        db.commit()
-        db.refresh(new_user)
-        respo = addBulkUser(request.email, request.fullName,generatePassword)
-        print(respo)
-        return new_user
+    company = db.query(models.Company).filter(models.Company.name == name[0]).first()
+
+    if not company:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+         detail=f"Company with the Name: { name[0]} does not exist")
+    else:    
+        counter = 0
+        userBulk = [] 
+        for row in rows:
+                counter = counter + 1
+                print(row)
+                print(row['Name'], row['Email'])
+                user = db.query(models.User).filter(models.User.email == row['Email']).first()
+                if user:
+                    raise HTTPException(status_code=303,
+                    detail= f"User with the email { row['Email']} already exist")
+                else:
+                        lower = string.ascii_lowercase
+                        upper = string.ascii_uppercase
+                        num = string.digits
+                        symbols = string.punctuation
+                        all = lower + upper + num + symbols
+                        temp = random.sample(all,12)
+                        generatePassword = "".join(temp)
+                        print(generatePassword)
+                        new_user = models.User(
+                                                fullName=row['Name'],
+                                                email=row['Email'], 
+                                                password=Hash.bcrypt(generatePassword), 
+                                                companyId =company.id)
+                        respo = addBulkUser(row['Email'], row['Name'],generatePassword)
+                        print(respo)
+                        db.add(new_user)
+                        db.commit()
+                        db.refresh(new_user)
+                        userBulk.append(new_user)
+        print(userBulk)
+        return userBulk  
+    # # user = db.query(models.User).filter(models.User.email == request.email).first()
+  
+    # # 
+    # # print(company is None)
+    # # 
+    # #
+  
+       
+
+   
+       
+    #     respo = addBulkUser(request.email, request.fullName,generatePassword)
+    #     print(respo)
+    #     return new_user
        

@@ -8,7 +8,8 @@ from fastapi.encoders import jsonable_encoder
 def create(request: schemas.Rider, db: Session):
     rider = db.query(models.Rider).filter(models.Rider.email == request.email).first()
     if rider:
-        return{"info": f"Rider with the name {request.rider} already exist"}
+      raise HTTPException(status_code= 303,
+                            detail =f"Rider with the email { request.email} already exist")
     else: 
         new_rider = models.Rider(name=request.name,
                                  email =request.email, 

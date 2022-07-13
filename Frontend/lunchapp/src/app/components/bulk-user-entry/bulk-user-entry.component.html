@@ -1,5 +1,33 @@
 <mat-toolbar>
   <span>Add Bulk New Users Using CSV File</span>
   <span class="fill-remaining-space"></span>
-  <button class="btn-dialog-close" mat-stroked-button (click)="onClose()" tabIndex="-1"><mat-icon>clear</mat-icon></button>
+  <button class="btn-dialog-close"
+  mat-stroked-button
+  (click)="onClose()" tabIndex="-1"><mat-icon>clear</mat-icon></button>
 </mat-toolbar>
+
+<span>Instructions</span><br>
+    <mat-card style="margin:auto; width:900px;">
+    <mat-card-title-group>
+    <mat-card-title>File Preparation</mat-card-title>
+    <mat-card-subtitle>Step 1. Rename the column as show in the image below as CSV</mat-card-subtitle>
+    <mat-card-subtitle>Step 2. Re save the file as CSV selecting CSV UTF-8 (Comma delimited) with the Company Name</mat-card-subtitle>
+    <mat-card-subtitle>Step 3. Ensure you select the Right Company Name </mat-card-subtitle>
+    <img  src="assets/images/csvFile.png" >
+    </mat-card-title-group>
+  </mat-card>
+  <br>
+
+
+  <mat-card style="margin:auto; width:900px;">
+  <div class="message" *ngIf="(isReady$)">
+    <input #file type="file" multiple (change)="uploadFile($event)" />
+  </div>
+
+  <div class="message" *ngIf="(completed$)">
+    <h4>
+      File has been uploaded successfully!
+    </h4>
+    <button (click)="resetUpload()">Upload Another File</button>
+  </div>
+</mat-card>

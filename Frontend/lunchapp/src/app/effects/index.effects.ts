@@ -3,7 +3,7 @@ import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
 import { ApiServicesService } from '../services/apiServices.service';
 import { Router } from '@angular/router';
-import { concatMap, exhaustMap, switchMap, tap } from 'rxjs/operators';
+import { concatMap, exhaustMap, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { map, mergeMap, catchError } from 'rxjs/operators';
 import * as LoginPageActions from '../actions/login.actions'
 import * as AdminPageActions from '../actions/admin.actions'
@@ -17,7 +17,10 @@ import * as FoodPageActions from '../actions/food.actions'
 import * as OrderPageActions from '../actions/order.actions'
 import * as UserRolePageActions from '../actions/user-role.actions'
 import * as CoreActions from '../actions/app.actions'
-import { deleteRiderSuccess } from '../actions/rider.actions';
+import { serializeError } from 'serialize-error';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
+
 
 
 @Injectable()
@@ -51,6 +54,8 @@ export class AppEffects {
     tap((error) => {
       console.log('error', error.error)
       this.router.navigateByUrl('/');
+      this.toastrService.error( error.error.error.detail, 'Major Error', {
+      });
     })
   ), {dispatch: false});
 
@@ -118,6 +123,14 @@ export class AppEffects {
     ofType(UserPagesActions.deleteUser),
     mergeMap((action) => this.apiService.deleteUser(action.id).pipe(
       map((response) => UserPagesActions.deleteUserSuccess({data:response})),
+      catchError(error => of(CoreActions.deplayFailure({response:error})))
+    ))
+  ));
+
+  bulkUserCreate$ = createEffect(() => this.actions$.pipe(
+    ofType(UserPagesActions.UploadRequestAction),
+    concatMap(action => this.apiService.bulkCreateUser(action.file).pipe(
+      map((response) =>UserPagesActions.createBulkUserSuccess({data:response})),
       catchError(error => of(CoreActions.deplayFailure({response:error})))
     ))
   ));
@@ -229,6 +242,29 @@ export class AppEffects {
       catchError(error => of(FoodPageActions.loadFoodsFailure({error:error})))
     ))
   ));
+  createFood$ = createEffect(() => this.actions$.pipe(
+    ofType(FoodPageActions.createFood),
+    concatMap((action) => this.apiService.createFood(action.data).pipe(
+      map((response) =>FoodPageActions.createFoodSuccess({data:response})),
+      catchError(error => of(CoreActions.deplayFailure({response:error})))
+    ))
+  ));
+
+  updateFood$ =createEffect(() => this.actions$.pipe(
+    ofType(FoodPageActions.updateFood),
+    concatMap((action) => this.apiService.updateFood(action.data).pipe(
+      map((response) => FoodPageActions.updateFoodSuccess({data:response})),
+      catchError(error => of(CoreActions.deplayFailure({response:error})))
+    ))
+  ));
+
+  deleteFood$ =createEffect(() => this.actions$.pipe(
+    ofType(FoodPageActions.deleteFood),
+    mergeMap((action) => this.apiService.deleteFood(action.id).pipe(
+      map((response) => FoodPageActions.deleteFoodSuccess({data:response})),
+      catchError(error => of(CoreActions.deplayFailure({response:error})))
+    ))
+  ));
 
 
 // ==============Order Effects================
@@ -293,12 +329,66 @@ export class AppEffects {
   ));
 
 
+  displatFailure$ = createEffect(() => this.actions$.pipe(
+    ofType(CoreActions.deplayFailure),
+    tap(action => {
+      console.log('action', action.response)
+      const error = action.response.error.detail || action.response.error
+      this.toastrService.warning(error, 'Minor Error', {
+
+      });
+    })
+    ),
+    {dispatch: false}
+    );
+
+
   constructor
   (
   private actions$: Actions,
   private apiService: ApiServicesService,
-  private router: Router
+  private router: Router,
+  private toastrService: ToastrService
 
     ) {}
+    // private getActionFromHttpEvent(event: HttpEvent<any>) {
+    //   console.log('event', event)
+    //   switch (event.type) {
+    //     case HttpEventType.Sent: {
+    //       return UserPagesActions.UploadStartedAction();
+    //     }
+    //     case HttpEventType.UploadProgress: {
+    //       return  UserPagesActions.UploadProgressAction({
+    //         progress: Math.round((100 * event.loaded) / Number(event.total))
+    //       });
+    //     }
+    //     case HttpEventType.ResponseHeader:
+    //     case HttpEventType.Response: {
+    //       console.log('event', event)
+    //       if (event.status === 200) {
+    //         console.log('event', event)
+    //         return  UserPagesActions.UploadCompletedAction();
+    //       } else {
+    //         console.log('event', event)
+    //         return  CoreActions.deplayFailure({
+    //           response: event.statusText
+    //         });
+    //       }
+    //     }
+    //     default: {
+    //       return CoreActions.deplayFailure({
+    //         response: event
+    //       });
+    //     }
+    //   }
+    // }
 
+    // private handleError(error: any) {
+    //   const friendlyErrorMessage = serializeError(error).message;
+    //   return  CoreActions.deplayFailure({
+    //     response: friendlyErrorMessage
+    //   });
+    // }
 }
+
+

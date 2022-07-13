@@ -10,7 +10,8 @@ from app.utils.config import settings
 def create(request: schemas.Food, db: Session):
     food = db.query(models.Food).filter(models.Food.name == request.name).first()
     if food:
-        return{"info": f"Food with the name {request.name} already exist"}
+           raise HTTPException(status_code= 303,
+                            detail =f"Food with the email { request.name} already exist")
     else: 
         new_food = models.Food(name=request.name, 
                                ingredients=request.ingredients,
@@ -20,6 +21,7 @@ def create(request: schemas.Food, db: Session):
         db.add(new_food)
         db.commit()
         db.refresh(new_food)
+        new_food.imagePath= create_presigned_url(settings.BUCKET_NAME, new_food.imagePath)
         return new_food
 
 
@@ -44,10 +46,8 @@ def destroy(id: int, db: Session):
     if not food:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Food with id {id} not found")
-    print(food.imagePath)
     delete_file_from_s3(settings.BUCKET_NAME,food.imagePath)
     db.delete(food)
-    #food.delete(synchronize_session=False)
     db.commit()
     return food
 

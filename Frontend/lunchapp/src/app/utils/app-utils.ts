@@ -1,3 +1,4 @@
+import { ShowUser } from '../models/index';
 
 export function detectChange(previous:number, current:number): boolean {
 
@@ -16,6 +17,8 @@ export function percentChange(previous:number, current:number):number {
 }
 
 export const createFunction = (items:any[], item:any) => [...items, item];
+
+export const createBulkFunction = (items:any[], result:any[]):any[] =>  [...items, ...result];
 
 export const updateFunction = (items:any[], changeItem:any) => items.map(item => {
   return item.id === changeItem.id? Object.assign({},item, changeItem): item

@@ -5,7 +5,12 @@ from app.utils import schemas
 from sqlalchemy.orm import Session
  
 def create(request: schemas.UserRoleBase, db: Session):
-        print('request', request)
+
+    userRole = db.query(models.UserRole).filter(models.UserRole.user_id ==request.user_id).first()
+    if userRole:
+       raise HTTPException(status_code= 303,
+                            detail =f"UserRole with already exist")
+    else:
         new_role = models.UserRole(user_id=request.user_id, role_id = request.role_id)
         db.add(new_role)
         db.commit()

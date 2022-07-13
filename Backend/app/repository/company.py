@@ -9,7 +9,8 @@ from fastapi.encoders import jsonable_encoder
 def create(request: schemas.Company, db: Session):
     company = db.query(models.Company).filter(models.Company.email == request.email).first()
     if company:
-        return{"info": f"Company with the email {request.email} already exist"}
+      raise HTTPException(status_code= 303,
+                            detail =f"Company with the email { request.email} already exist")
     else: 
         new_company = models.Company(name=request.name,
                                      email=request.email,

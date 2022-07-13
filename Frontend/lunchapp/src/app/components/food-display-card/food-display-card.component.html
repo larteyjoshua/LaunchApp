@@ -13,7 +13,12 @@
     <mat-card-subtitle>Added by {{addedBy}}</mat-card-subtitle>
     <mat-card-subtitle>Date: {{dateAdded}}</mat-card-subtitle>
     </div>
+    <mat-card-actions align="end">
+      <button mat-icon-button (click)="onEdit(id, name,addedBy, price, imagePath, ingredients, dateAdded)"><mat-icon>launch</mat-icon></button>
+      <button mat-icon-button color="warn" (click)="onDelete(id)"><mat-icon>delete_outline</mat-icon></button>
+    </mat-card-actions>
     </mat-card-content>
+
 </mat-card>
 </div>
 

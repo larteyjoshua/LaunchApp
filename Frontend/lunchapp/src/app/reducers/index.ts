@@ -14,7 +14,8 @@ import {
   ShowAccount,
   ShowFood,
   ShowOrder,
-  UserRole
+  UserRole,
+  UploadStatus
  } from '../models/index';
 import * as LoginPageActions from '../actions/login.actions'
 import * as AdminPageActions from '../actions/admin.actions'
@@ -27,7 +28,14 @@ import * as AccountPageActions from '../actions/account.actions'
 import * as FoodPageActions from '../actions/food.actions'
 import * as OrderPageActions from '../actions/order.actions'
 import * as UserRoleActions from '../actions/user-role.actions'
-import { createFunction, deleteFunction, updateFunction, updateUserRoleFunction, deleteUserRoleFunction } from '../utils/app-utils';
+import {
+   createFunction,
+   deleteFunction,
+   updateFunction,
+   updateUserRoleFunction,
+   deleteUserRoleFunction,
+   createBulkFunction
+   } from '../utils/app-utils';
 
 
 export interface AppState {
@@ -42,9 +50,14 @@ export interface AppState {
  roles: ShowRole[];
  feedbacks: ShowFeedback[];
  accounts: ShowAccount[];
- foods: ShowFood[],
- orders: ShowOrder[],
- userRoles: UserRole[]
+ foods: ShowFood[];
+ orders: ShowOrder[];
+ userRoles: UserRole[];
+
+ status: UploadStatus;
+ fileUploadError: string;
+ progress: number;
+
 
 }
 
@@ -62,7 +75,10 @@ export const initialState: Readonly <AppState> = {
  accounts:[],
  foods:[],
  orders:[],
- userRoles:[]
+ userRoles:[],
+ status: UploadStatus.Ready,
+ fileUploadError: '',
+ progress: 0
 
 };
  const _lunchAppReducer = createReducer(
@@ -155,9 +171,17 @@ on(UserPageActions.updateUserSuccess, (state, {data}) =>
   users: updateFunction(state.users,data)
 })),
 
+
 on(UserPageActions.createUserSuccess, (state, {data}) =>({
   ...state,
   users:createFunction(state.users, data)
+})),
+
+on(UserPageActions.createBulkUserSuccess, (state, {data}) =>({
+  ...state,
+  users: createBulkFunction(state.users, data),
+  status: UploadStatus.Completed,
+  progress: 100,
 })),
 
 
@@ -314,6 +338,25 @@ on(FoodPageActions.loadFoodsFailure, (state, {error}) =>(
   }
 )),
 
+on(FoodPageActions.deleteFoodSuccess, (state, {data}) =>
+({
+  ...state,
+  foods: deleteFunction(state.foods,data)
+
+})),
+
+on(FoodPageActions.updateFoodSuccess, (state, {data}) =>
+({
+  ...state,
+  foods: updateFunction(state.foods,data)
+})),
+
+
+on(FoodPageActions.createFoodSuccess, (state, {data}) =>({
+  ...state,
+  foods:createFunction(state.foods, data)
+})),
+
 
  // =============== Order Reducer =============
 on(OrderPageActions.loadOrders, state => ({
@@ -380,7 +423,56 @@ on(UserRoleActions.createUserRoleSuccess, (state, {data}) =>({
   userRoles:createFunction(state.userRoles, data)
 })),
 
+
+ // =============== CSV User File Upload Reducer =============
+ on(UserPageActions.UploadRequestAction, (state, {file}) =>({
+  ...state,
+  status: UploadStatus.Requested,
+  progress: 0,
+   fileUploadError: ''
+})),
+
+on(UserPageActions.UploadCancelAction, (state) =>({
+  ...state,
+  status: UploadStatus.Ready,
+  progress: 0,
+   fileUploadError: ''
+})),
+
+on(UserPageActions.UploadRequestAction, (state) =>({
+  ...state,
+  status: UploadStatus.Ready,
+  progress: 0,
+   fileUploadError: ''
+})),
+
+on(UserPageActions.UploadFailureAction, (state) =>({
+  ...state,
+  status: UploadStatus.Failed,
+  progress: 0,
+   fileUploadError: ''
+})),
+
+on(UserPageActions.UploadStartedAction, (state) =>({
+  ...state,
+  status: UploadStatus.Started,
+  progress: 0,
+})),
+
+on(UserPageActions.UploadProgressAction, (state, {progress}) =>({
+  ...state,
+  status: UploadStatus.Ready,
+  progress: progress,
+})),
+
+on(UserPageActions.UploadCompletedAction, (state,) =>({
+  ...state,
+  status: UploadStatus.Completed,
+  progress: 100,
+})),
+
 );
+
 
 export function lunchAppReducer(state: AppState, action: Action) {
   return _lunchAppReducer(state, action);

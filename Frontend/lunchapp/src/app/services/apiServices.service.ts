@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { CreateAdmin, UserLoginDetail, ShowAdmin, CreateUser, ShowUser, CreateCompany, ShowCompany, CreateRider, ShowRider, ShowOrder, UserRole } from '../models/index';
+import { CreateAdmin, UserLoginDetail, ShowAdmin, CreateUser, ShowUser, CreateCompany, ShowCompany, CreateRider, ShowRider, ShowOrder, UserRole, ShowFood, CreateFood } from '../models/index';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -108,6 +108,21 @@ export class ApiServicesService {
     return this.http.delete(url, {headers})
   }
 
+  bulkCreateUser(file: File): Observable<any> {
+
+    const geToken = localStorage.getItem("token")
+    const headers = {
+      'Authorization': 'Bearer ' + geToken,
+      'Accept': "multipart/form-data"
+
+  }
+  const formData = new FormData();
+  formData.append('csvFile', file, file.name);
+  formData.append('name',file.name)
+  console.log('formata',formData)
+  const url = 'admin/bulk_users/csv'
+  return this.http.post(url, formData, {headers})
+  }
 
 // =============== Order Api Services ===================
   getAllOrders(): Observable<any>{
@@ -295,6 +310,46 @@ const url = '/admin/order/delete/' + id
   }
     const url = '/admin/food/'
     return this.http.get(url, {headers})
+  }
+
+  updateFood(food:CreateFood):Observable<any> {
+    const geToken = localStorage.getItem("token")
+    const headers = {
+      'Authorization': 'Bearer ' + geToken,
+      'Accept': "multipart/form-data"
+
+  }
+  const formData = new FormData();
+  formData.append('name',food.name);
+  formData.append('ingredients', food.ingredients)
+  formData.append('price', food.price)
+  formData.append('imagePath', food.imagePath,  food.imagePath.name);
+  console.log('formata',formData)
+  const url = 'admin/food/' + food.id
+  return this.http.post(url, formData, {headers})
+  }
+
+  deleteFood(id:number):Observable<any> {
+    const geToken = localStorage.getItem("token")
+    const headers = {
+      'Authorization': 'Bearer ' + geToken,
+      'Content-type': 'application/x-www-form-urlencoded'
+  }
+  const url = '/admin/food/delete/' + id
+    return this.http.delete(url, {headers})
+  }
+
+  createFood(food:FormData): Observable<any> {
+
+    const geToken = localStorage.getItem("token")
+    const headers = {
+      'Authorization': 'Bearer ' + geToken,
+      'Accept': "multipart/form-data"
+
+  }
+
+  const url = 'admin/food/add'
+  return this.http.post(url, food, {headers})
   }
 
 

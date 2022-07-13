@@ -6,6 +6,9 @@ import { Observable } from 'rxjs';
 import { ShowFood } from 'src/app/models';
 import { getFoodWithDetails } from 'src/app/selectors/index.selectors';
 import { AppState } from 'src/app/reducers';
+import { FormServicesService } from 'src/app/services/form-services.service';
+import { DialogService } from 'src/app/services/dialog.service';
+import { FoodEntryComponent } from '../food-entry/food-entry.component';
 
 @Component({
   selector: 'app-foods',
@@ -37,7 +40,9 @@ export class FoodsComponent implements OnInit {
   );
 
   constructor(private breakpointObserver: BreakpointObserver,
-    private store: Store<AppState>,) {
+    private store: Store<AppState>,
+    public formService: FormServicesService,
+    private dialogService: DialogService) {
     this.foodList = this.store.pipe(select(getFoodWithDetails));
   }
   ngOnInit(): void {
@@ -51,5 +56,8 @@ export class FoodsComponent implements OnInit {
     this.searchKey = "";
   }
   applyFilter() {}
-  onCreate() {}
+
+  onCreate() {
+    this.dialogService.foodDialog(FoodEntryComponent,'');
+  }
 }

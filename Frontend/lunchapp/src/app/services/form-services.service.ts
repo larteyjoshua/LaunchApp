@@ -167,4 +167,41 @@ export class FormServicesService {
         populateUserRoleForm(data:any) {
           this.userRoleForm.setValue(data);
         }
+
+       // ========================= Food Form =================
+       foodForm = new FormGroup({
+        id: new FormControl(),
+        name: new FormControl('', [Validators.required]),
+        ingredients : new FormControl('', [Validators.required]),
+        price : new FormControl('', [Validators.required]),
+        imagePath : new FormControl(null, [Validators.required]),
+        dateAdded: new FormControl(''),
+        addedBy: new FormControl('')
+      });
+
+      initializeFoodFormGroup() {
+        this.foodForm.patchValue({
+          id: null ,
+          name: '',
+          ingredients: '',
+          price: '',
+          imagePath: null,
+          dateAdded: new Date(),
+          addedBy: ''
+        });
+      }
+
+      populateFoodForm(data:any) {
+        this.foodForm.patchValue({
+          id: data.id ,
+          name: data.name,
+          ingredients: data.ingredients,
+          price: data.price,
+          dateAdded: new Date(),
+          addedBy: data.addedBy
+        });
+      }
+
+
 }
+

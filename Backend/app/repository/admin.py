@@ -8,7 +8,8 @@ from app.utils import schemas
 def create(request: schemas.Admin, db: Session):
     user = db.query(models.User).filter(models.User.email == request.email).first()
     if user:
-        return{"info": f"User with the email {request.email} already exist"}
+        raise HTTPException(status_code= 303,
+                            detail =f"Admin with the email { request.email} already exist")
     else: 
         new_manager = models.User(fullName=request.fullName,
                                      email=request.email, 
