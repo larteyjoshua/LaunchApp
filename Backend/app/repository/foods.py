@@ -64,4 +64,19 @@ def update(id: int, request: schemas.Food, db: Session):
     food.price = request.price
     db.commit()
     db.refresh(food)
+    food.imagePath= create_presigned_url(settings.BUCKET_NAME, food.imagePath)
+    return food
+
+def updateWithNoFile(id: int, request: schemas.Food, db: Session):
+    food = db.query(models.Food).filter(models.Food.id == id).first()
+    if not food:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Food with id {id} not found")
+    
+    food.name = request.name
+    food.ingredients = request.ingredients
+    food.price = request.price
+    db.commit()
+    db.refresh(food)
+    food.imagePath= create_presigned_url(settings.BUCKET_NAME, food.imagePath)
     return food

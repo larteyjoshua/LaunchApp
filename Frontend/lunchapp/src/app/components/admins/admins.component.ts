@@ -19,7 +19,7 @@ import { deleteAdmin } from '../../actions/admin.actions';
   templateUrl: './admins.component.html',
   styleUrls: ['./admins.component.scss']
 })
-export class AdminsComponent implements OnInit {
+export class AdminsComponent implements OnInit, AfterViewInit {
 
   public adminsWithDetail: Observable<any>;
   listData: MatTableDataSource<any> = new MatTableDataSource();
@@ -44,6 +44,10 @@ export class AdminsComponent implements OnInit {
 
       this.adminsWithDetail = this.store.pipe(select(getAdminsDetails));
 
+  }
+  ngAfterViewInit(): void {
+    this.listData.sort = this.sort;
+    this.listData.paginator = this.paginator;
   }
   ngOnInit(): void {
 

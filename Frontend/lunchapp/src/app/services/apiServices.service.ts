@@ -1,7 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { CreateAdmin, UserLoginDetail, ShowAdmin, CreateUser, ShowUser, CreateCompany, ShowCompany, CreateRider, ShowRider, ShowOrder, UserRole, ShowFood, CreateFood } from '../models/index';
+import {
+  CreateAdmin,
+  ShowAdmin,
+  CreateUser,
+  ShowUser,
+  CreateCompany,
+  ShowCompany,
+  CreateRider,
+  ShowRider,
+  ShowOrder,
+  UserRole } from '../models/index';
 import { Observable } from 'rxjs';
+import { PasswordRecover } from '../models/index';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +30,22 @@ export class ApiServicesService {
 
     return this.http.post('login', body)
 
+  }
+
+  passwordReset(email:string): Observable<any> {
+
+    const host = window.location.protocol + "//" + window.location.host;
+
+    const hosts = {"url": host}
+    console.log('email', host)
+    const url = '/password-recovery/' + email;
+      return this.http.post(url,hosts);
+  }
+
+  passwordRecovery(data:PasswordRecover): Observable<any> {
+    console.log(data)
+    const url = '/reset-password/';
+      return this.http.post(url,data);
   }
 
 
@@ -302,7 +329,7 @@ const url = '/admin/order/delete/' + id
 
 
   // =============== Food Api Services ===================
-  getAllfoods(): Observable<any>{
+  getAllFoods(): Observable<any>{
     const geToken = localStorage.getItem("token")
    const headers = {
       'Authorization': 'Bearer ' + geToken,
@@ -312,21 +339,20 @@ const url = '/admin/order/delete/' + id
     return this.http.get(url, {headers})
   }
 
-  updateFood(food:CreateFood):Observable<any> {
+  updateFood(food:FormData):Observable<any> {
     const geToken = localStorage.getItem("token")
     const headers = {
       'Authorization': 'Bearer ' + geToken,
       'Accept': "multipart/form-data"
 
   }
-  const formData = new FormData();
-  formData.append('name',food.name);
-  formData.append('ingredients', food.ingredients)
-  formData.append('price', food.price)
-  formData.append('imagePath', food.imagePath,  food.imagePath.name);
-  console.log('formata',formData)
-  const url = 'admin/food/' + food.id
-  return this.http.post(url, formData, {headers})
+  console.log('condtion', food.has('imagePath'))
+  if (food.has('imagePath')){
+    const url = 'admin/food/update/' + food.get('id')
+    return this.http.put(url, food, {headers})
+  }
+  else {const url = 'admin/food/update/nofile/' + food.get('id')
+  return this.http.put(url, food, {headers})}
   }
 
   deleteFood(id:number):Observable<any> {
@@ -353,14 +379,14 @@ const url = '/admin/order/delete/' + id
   }
 
 
-  // =============== Account Api Services ===================
-  getAllAccounts(): Observable<any>{
+  // =============== Cost Api Services ===================
+  getAllCosts(): Observable<any>{
     const geToken = localStorage.getItem("token")
    const headers = {
       'Authorization': 'Bearer ' + geToken,
       'Content-type': 'application/x-www-form-urlencoded'
   }
-    const url = '/admin/account/'
+    const url = '/admin/cost/'
     return this.http.get(url, {headers})
   }
 

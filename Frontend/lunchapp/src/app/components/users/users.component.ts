@@ -22,7 +22,7 @@ import { BulkUserEntryComponent } from '../bulk-user-entry/bulk-user-entry.compo
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss']
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, AfterViewInit {
   displayedColumns = [
     'id',
   'fullName',
@@ -53,6 +53,10 @@ export class UsersComponent implements OnInit {
     this.userList = this.store.pipe(select(getUsersDetails));
     this.companyList = this.store.pipe(select(getCompanies));
   }
+  ngAfterViewInit(): void {
+    this.listData.sort = this.sort;
+    this.listData.paginator = this.paginator;
+  }
   ngOnInit(): void {
     this.userList.subscribe((data) => {
       if (data){
@@ -67,8 +71,7 @@ export class UsersComponent implements OnInit {
         });
     }
   });
-  this.listData.sort = this.sort;
-  this.listData.paginator = this.paginator;
+
   }
 
 

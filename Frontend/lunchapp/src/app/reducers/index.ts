@@ -11,23 +11,25 @@ import {
   ShowRider,
   ShowRole,
   ShowFeedback,
-  ShowAccount,
   ShowFood,
   ShowOrder,
   UserRole,
   UploadStatus
  } from '../models/index';
-import * as LoginPageActions from '../actions/login.actions'
-import * as AdminPageActions from '../actions/admin.actions'
-import * as UserPageActions from '../actions/user.actions'
-import * as CompanyPageActions from '../actions/company.actions'
-import * as RiderPageActions from '../actions/rider.actions'
-import * as RolePageActions from '../actions/role.actions'
-import * as FeedbackPageActions from '../actions/feedback.actions'
-import * as AccountPageActions from '../actions/account.actions'
-import * as FoodPageActions from '../actions/food.actions'
-import * as OrderPageActions from '../actions/order.actions'
-import * as UserRoleActions from '../actions/user-role.actions'
+import * as LoginPageActions from '../actions/login.actions';
+import * as AdminPageActions from '../actions/admin.actions';
+import * as UserPageActions from '../actions/user.actions';
+import * as CompanyPageActions from '../actions/company.actions';
+import * as RiderPageActions from '../actions/rider.actions';
+import * as RolePageActions from '../actions/role.actions';
+import * as FeedbackPageActions from '../actions/feedback.actions';
+import * as AccountPageActions from '../actions/account.actions';
+import * as FoodPageActions from '../actions/food.actions';
+import * as OrderPageActions from '../actions/order.actions';
+import * as UserRoleActions from '../actions/user-role.actions';
+
+import { ShowCost, ShowPayment, UserLoginDetail } from '../models/index';
+
 import {
    createFunction,
    deleteFunction,
@@ -39,6 +41,7 @@ import {
 
 
 export interface AppState {
+  userName: string,
  error: string;
  token: string;
  admins: ShowAdmin[];
@@ -49,10 +52,11 @@ export interface AppState {
  riders: ShowRider[];
  roles: ShowRole[];
  feedbacks: ShowFeedback[];
- accounts: ShowAccount[];
+ costs: ShowCost[];
  foods: ShowFood[];
  orders: ShowOrder[];
  userRoles: UserRole[];
+ payments: ShowPayment[];
 
  status: UploadStatus;
  fileUploadError: string;
@@ -62,6 +66,7 @@ export interface AppState {
 }
 
 export const initialState: Readonly <AppState> = {
+  userName: '',
  error: '',
  token: '',
  admins:[],
@@ -72,30 +77,35 @@ export const initialState: Readonly <AppState> = {
  riders:[],
  roles:[],
  feedbacks:[],
- accounts:[],
+ costs:[],
  foods:[],
  orders:[],
  userRoles:[],
  status: UploadStatus.Ready,
  fileUploadError: '',
- progress: 0
-
+ progress: 0,
+ payments: []
 };
+
  const _lunchAppReducer = createReducer(
   initialState,
 
   // =============== Login Reducer =============
-  on(LoginPageActions.loadLogins, state =>
+  on(LoginPageActions.loadLogins, (state,{data}) =>
     ({
       ...state,
+      userName: data.username,
       error: state.error
-
     })),
+
     on(LoginPageActions.loadLoginsSuccess,(state, {token}) => ({
       ...state,
         token:token,
     }
    )),
+   on (LoginPageActions.logout, state => ({
+   ...state = initialState
+   })),
 
    on(LoginPageActions.loadLoginsFailure,(state, {error}) => ({
     ...state,
@@ -303,22 +313,12 @@ on(FeedbackPageActions.loadFeedbacksFailure, (state, {error}) =>(
 )),
 
 
- // =============== Account Reducer =============
-on(AccountPageActions.loadAccounts, state => ({
-  ...state,
-  error: state.error
-})),
-on(AccountPageActions.loadAccountsSuccess, (state, {data}) => (
+ // =============== Cost Reducer =============
+on(AccountPageActions.loadCostsSuccess, (state, {data}) => (
   {
   ...state,
-  accounts: data
+  costs: data
 })),
-on(AccountPageActions.loadAccountsFailure, (state, {error}) =>(
-  {
-    ...state,
-    error:error
-  }
-)),
 
 
  // =============== Food Reducer =============

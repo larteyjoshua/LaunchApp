@@ -174,7 +174,7 @@ export class FormServicesService {
         name: new FormControl('', [Validators.required]),
         ingredients : new FormControl('', [Validators.required]),
         price : new FormControl('', [Validators.required]),
-        imagePath : new FormControl(null, [Validators.required]),
+        imagePath : new FormControl(null),
         dateAdded: new FormControl(''),
         addedBy: new FormControl('')
       });

@@ -23,8 +23,6 @@ class ShowUser(BaseModel):
     
     class Config():
         orm_mode = True
-
-
 class ShowAdmin(BaseModel):
     id: int = None
     fullName:str = None
@@ -143,7 +141,7 @@ class ShowOrder(BaseModel):
     trackingStage: str
     riderId: int = None
     cost: float
-    trackingStage: str
+    trackingStage: str = None
     
     class Config():
         orm_mode = True
@@ -152,8 +150,7 @@ class Feedback(BaseModel):
     foodId: int
     comment: str
     stars: int
-    commentedBy: str
-    
+
     class Config():
         orm_mode = True
         
@@ -218,15 +215,69 @@ class BulkUser(BaseModel):
         orm_mode = True
 
 
-import csv
+class CreatePayment(BaseModel):
+    companyId: int
+    amountPaid: float
+    paymentType: str = None
+    modifyBy: int = None
+    paidBy: str
+    transactionId: str
+    class Config():
+        orm_mode = True
 
-class DictReaderStrip(csv.DictReader):
-    @property                                    
-    def fieldnames(self):
-        if self._fieldnames is None:
-            # Initialize self._fieldnames
-            # Note: DictReader is an old-style class, so can't use super()
-            csv.DictReader.fieldnames.fget(self)
-            if self._fieldnames is not None:
-                self._fieldnames = [name.strip() for name in self._fieldnames]
-        return self._fieldnames
+class ShowPayment(BaseModel):
+    id:int = None
+    companyId: int
+    amountPaid: float = None
+    paymentType: str = None
+    modifyBy: int = None
+    paidBy: str
+    transactionId: str
+    balance: float = None
+    datePaid: datetime = None
+    class Config():
+        orm_mode = True
+
+class CreateCost(BaseModel):
+    companyId: int
+    totalCost: float
+    generatedBy: int = None
+    class Config():
+        orm_mode = True
+
+class ShowCost(BaseModel):
+    id:int
+    companyId: int
+    totalCost: float
+    generatedBy: int = None
+    dateGenerated: datetime
+    class Config():
+        orm_mode = True
+
+
+class ShowUserOrder(BaseModel):
+    Food: ShowFood 
+    Order: ShowOrder 
+    Rider: ShowRider  = None
+    class Config():
+        orm_mode = True
+
+class ShowUserDetails(BaseModel):
+    id: int
+    fullName:str
+    email:str
+    dateCreated: datetime
+    isActive: bool
+    companyName:str
+    companyIsActive: Optional[bool] = None
+    location: str
+    totalFeedback: int = None
+    totalOrder: int = None
+    class Config():
+        orm_mode = True
+
+
+class Resource(BaseModel):
+    url: str
+    class Config():
+        orm_mode = True

@@ -1,6 +1,5 @@
 from datetime import timedelta
 from typing import Any
-
 from fastapi import APIRouter, status, Depends, HTTPException, Body, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -25,13 +24,17 @@ def login(request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(
         "access_token": access_token, 
             "token_type": "bearer"
             }
+
     
 @router.post('/password-recovery/{email}', response_model=schemas.Msg)
-def user_recover_password(email: str,request: Request, db: Session = Depends(database.get_db)) -> Any:
-     port = request.url.port
-     host = request.client.host
-     url = f"http://{host}:{port}/reset-password"
-     return users.passwordRecover(email, db, url)
+def user_recover_password(email: str, url: schemas.Resource, request: Request, db: Session = Depends(database.get_db)) -> Any:
+    # #  port = request.url.port
+    # port = request.client.port
+    # host = request.client.host
+    # print(request.client)
+    # print(request.url)
+    link = f"{url.url}/passwordRecover"
+    return users.passwordRecover(email, db, link)
 
 @router.post('/reset-password/', response_model=schemas.Msg)
 def reset_password(

@@ -20,7 +20,7 @@ import { getOrders } from '../../selectors/index.selectors';
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.scss']
 })
-export class OrdersComponent implements OnInit {
+export class OrdersComponent implements OnInit, AfterViewInit  {
 
   public ordersDetailList: Observable<any>;
   public ordersList: Observable<any>;
@@ -57,6 +57,10 @@ export class OrdersComponent implements OnInit {
     this.ordersDetailList = this.store.pipe(select(getOrdersWithUserDetails));
     this.ordersList = this.store.pipe(select(getOrders));
     this.ridersList = this.store.pipe(select(getRiders));
+  }
+  ngAfterViewInit(): void {
+    this.listData.sort = this.sort;
+    this.listData.paginator = this.paginator;
   }
   ngOnInit(): void {
     this.store.dispatch(loadOrders());

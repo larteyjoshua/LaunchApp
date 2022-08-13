@@ -21,7 +21,7 @@ import { deleteCompany } from '../../actions/company.actions';
   templateUrl: './companies.component.html',
   styleUrls: ['./companies.component.scss']
 })
-export class CompaniesComponent implements OnInit {
+export class CompaniesComponent implements OnInit, AfterViewInit {
 
   public companyList: Observable<ShowCompany[]>;
   listData: MatTableDataSource<any> = new MatTableDataSource()
@@ -47,6 +47,10 @@ export class CompaniesComponent implements OnInit {
     ) {
     this.companyList = this.store.pipe(select(getCompanies));
   }
+  ngAfterViewInit(): void {
+    this.listData.sort = this.sort;
+    this.listData.paginator = this.paginator;
+  }
   ngOnInit(): void {
     this.companyList.subscribe((data) => {
       if (data){
@@ -54,13 +58,6 @@ export class CompaniesComponent implements OnInit {
       this.listData = new MatTableDataSource(data);
     }
   });
-  this.listData.sort = this.sort;
-  this.listData.paginator = this.paginator;
-  // this.listData.filterPredicate = (data, filter) => {
-  //   return this.displayedColumns.some(ele => {
-  //     return ele != 'actions' && data[ele].toLowerCase().indexOf(filter) != -1;
-  //   });
-  // };
 }
 
 

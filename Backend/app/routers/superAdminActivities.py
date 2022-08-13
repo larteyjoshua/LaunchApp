@@ -1,8 +1,9 @@
+from cmath import cos
 from fastapi import APIRouter, Depends, status, Security
 from app.models import  models
 from sqlalchemy.orm import Session
 from app.utils import database, schemas, oauth2
-from app.repository import admin, company, roles, users, riders, foods, account, orders, feedbacks,user_role
+from app.repository import admin, company, roles, users, riders, foods, orders, feedbacks,user_role, costs, payments
 from typing import List
 from app.utils.userRoles import Role
 
@@ -62,12 +63,12 @@ async def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.
     )):
     return foods.destroy(id, db)
 
-@router.delete('/account/delete/{id}')
-async  def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.User = Security(
-        oauth2.get_current_active_user,
-        scopes=[Role.SUPER_ADMIN["name"]],
-    )):
-    return account.destroy(id, db)
+# @router.delete('/account/delete/{id}')
+# async  def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.User = Security(
+#         oauth2.get_current_active_user,
+#         scopes=[Role.SUPER_ADMIN["name"]],
+#     )):
+#     return account.destroy(id, db)
 
 @router.delete('/order/delete/{id}')
 async def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.User = Security(
@@ -89,3 +90,17 @@ async def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.
         scopes=[Role.SUPER_ADMIN["name"]],
     )):
     return orders.destroy(id, db)
+
+@router.delete('/payment/delete/{id}')
+async def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.User = Security(
+        oauth2.get_current_active_user,
+        scopes=[Role.SUPER_ADMIN["name"]],
+    )):
+    return payments.destroy(id, db)
+
+@router.delete('/cost/delete/{id}')
+async def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.User = Security(
+        oauth2.get_current_active_user,
+        scopes=[Role.SUPER_ADMIN["name"]],
+    )):
+    return costs.destroy(id, db)

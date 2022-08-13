@@ -37,6 +37,34 @@ def show(id: int, db: Session):
                             detail=f"User with the id {id} is not available")
     return user
 
+
+def showDetails(id: int, db: Session):
+    user = db.query(models.User, models.Company).outerjoin(
+         models.Company).filter( models.User.id == id).first()
+        
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"User with the id {id} is not available")
+
+    orders = db.query(models.Order).filter(models.Order.userId == id).all()
+    feedbacks = db.query(models.Feedback).filter(models.Feedback.commentedBy == id).all()
+    totalOrders = len(orders)
+    totalFeedbacks = len(feedbacks)  
+      
+    newUser = schemas.ShowUserDetails(
+    id = user.User.id, 
+    fullName= user.User.fullName,
+   email = user.User.email, 
+   dateCreated = user.User.dateCreated,
+   isActive = user.User.isActive,
+   companyName=  user.Company.name,
+   companyIsActive = user.Company.isActive,
+   location = user.Company.location,
+    totalOrder = totalOrders,
+    totalFeedback=totalFeedbacks)
+
+    return newUser
+
 def get_all(db: Session):
     users = db.query(models.User).filter(models.User.companyId != None).all()
     return users
@@ -111,8 +139,10 @@ def passwordRecover( email: str, db: Session, url:str):
     token = generate_password_recovery_token(email=user.email)
 
     link = f"{url}?token={token}"
-    passwordRecoveryEmail.passwordRevovery(user.email, user.fullName, link)
+    print(url)
+    passwordRecoveryEmail.passwordRecovery(user.email, user.fullName, link)
     return {"msg": "Password recovery email sent"}
+
 
 def passwordReset(token: str, new_password: str, db: Session):
     email = verify_password_reset_token(token)
@@ -126,7 +156,7 @@ def passwordReset(token: str, new_password: str, db: Session):
         )
     elif not is_active(user):
         raise HTTPException(status_code=400, detail="Inactive user")
-    user.paaword = Hash.bcrypt(new_password)
+    user.password = Hash.bcrypt(new_password)
     db.add(user)
     db.commit()
     return {"msg": "Password updated successfully"}

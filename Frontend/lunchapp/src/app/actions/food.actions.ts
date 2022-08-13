@@ -27,7 +27,7 @@ export const deleteFoodSuccess = createAction(
 
 export const updateFood = createAction(
   '[Food] Update Food',
-  props<{data: CreateFood}>()
+  props<{data: FormData}>()
 );
 
 export const updateFoodSuccess = createAction(

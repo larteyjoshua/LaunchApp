@@ -1,24 +1,38 @@
   <div class="food-display">
-  <mat-card class="home-card">
-    <mat-card-content class="home-card-content">
-      <img mat-card-image
-        src="{{imagePath}}"
-        alt="{{name}}">
-      <div>
+    <mat-card class="example-card">
+
+
+      <img mat-card-xl-image style="left: 0; position:absolute;" src="{{imagePath}}" >
+      <mat-card-content class="content-element">
+
+        <mat-card-title>{{name}}</mat-card-title>
+        <mat-card-subtitle> Price: {{price}} .00 GHC</mat-card-subtitle>
+        <mat-card-subtitle> Made-Up: {{ingredients}}</mat-card-subtitle>
+        <mat-card-subtitle>Added by {{addedBy}}</mat-card-subtitle>
+        <mat-card-subtitle>Date: {{dateAdded}}</mat-card-subtitle>
+        <mat-card-actions >
+          <button mat-icon-button (click)="onEdit(id, name,addedBy, price, imagePath, ingredients, dateAdded)"><mat-icon>launch</mat-icon></button>
+          <button mat-icon-button color="warn" (click)="onDelete(id)"><mat-icon>delete_outline</mat-icon></button>
+        </mat-card-actions>
+      </mat-card-content>
+
+
+
+    </mat-card>
+
+
+
+
+    <!-- <mat-card-content class="home-card-content">
+
       <mat-card-title-group>
-      <mat-card-title>{{name}}</mat-card-title>
-      <mat-card-subtitle> Price: {{price}} .00 GHC</mat-card-subtitle>
-      <mat-card-subtitle> Made-Up: {{ingredients}}</mat-card-subtitle>
+
+
     </mat-card-title-group>
-    <mat-card-subtitle>Added by {{addedBy}}</mat-card-subtitle>
-    <mat-card-subtitle>Date: {{dateAdded}}</mat-card-subtitle>
+
     </div>
-    <mat-card-actions align="end">
-      <button mat-icon-button (click)="onEdit(id, name,addedBy, price, imagePath, ingredients, dateAdded)"><mat-icon>launch</mat-icon></button>
-      <button mat-icon-button color="warn" (click)="onDelete(id)"><mat-icon>delete_outline</mat-icon></button>
-    </mat-card-actions>
     </mat-card-content>
 
 </mat-card>
-</div>
+</div> -->
 

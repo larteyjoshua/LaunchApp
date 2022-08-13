@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
-import { ShowRole } from '../../models/index';
+import { ShowRole, UserRoleActions } from '../../models/index';
 import { getRoles } from 'src/app/selectors/index.selectors';
 import {Store,select}  from '@ngrx/store';
 import { AppState } from 'src/app/reducers';
@@ -16,7 +16,7 @@ import { UserRoleEntryComponent } from '../user-role-entry/user-role-entry.compo
   templateUrl: './roles.component.html',
   styleUrls: ['./roles.component.scss']
 })
-export class RolesComponent implements  OnInit {
+export class RolesComponent implements OnInit, AfterViewInit {
   listData: MatTableDataSource<any> = new MatTableDataSource()
   public roleList: Observable<ShowRole[]>;
 
@@ -35,6 +35,10 @@ export class RolesComponent implements  OnInit {
      {
     this.roleList = this.store.pipe(select(getRoles));
   }
+  ngAfterViewInit(): void {
+    this.listData.sort = this.sort;
+    this.listData.paginator = this.paginator;
+  }
 
   ngOnInit(): void {
     this.roleList.subscribe((data) => {
@@ -43,13 +47,6 @@ export class RolesComponent implements  OnInit {
       this.listData = new MatTableDataSource(data);
     }
   });
-  this.listData.sort = this.sort;
-  this.listData.paginator = this.paginator;
-  // this.listData.filterPredicate = (data, filter) => {
-  //   return this.displayedColumns.some(ele => {
-  //     return ele != 'actions' && data[ele].toLowerCase().indexOf(filter) != -1;
-  //   });
-  // }
   }
 
 
@@ -63,15 +60,15 @@ export class RolesComponent implements  OnInit {
   }
 
   onUserRoleCreate() {
-    this.dialogService.UserRoleDialog(UserRoleEntryComponent, 'Create');
+    this.dialogService.UserRoleDialog(UserRoleEntryComponent, UserRoleActions.create);
   }
 
   onUserRoleDelete(){
-    this.dialogService.UserRoleDialog(UserRoleEntryComponent, 'Delete');
+    this.dialogService.UserRoleDialog(UserRoleEntryComponent, UserRoleActions.delete);
   }
 
   onUserRoleUpdate(){
-    this.dialogService.UserRoleDialog(UserRoleEntryComponent, 'Update');
+    this.dialogService.UserRoleDialog(UserRoleEntryComponent,  UserRoleActions.update);
   }
 
   onEdit(row:any){

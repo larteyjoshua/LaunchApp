@@ -322,7 +322,7 @@ footer = """ <tr>
 def getEmailMessage(userName: str,  link: str):
     return ''.join([ header, body.format(userName, link), footer])
 
-def passwordRevovery(userEmail:str, userName: str, link: str):
+def passwordRecovery(userEmail:str, userName: str, link: str):
     subject:str ="LaunchApp Password Recovery"
     message = getEmailMessage(userName, link)
-    sendEmailHelper.sendMail(userEmail, message, subject)
+    sendEmailHelper.sendNormalEmail(userEmail, message, subject)

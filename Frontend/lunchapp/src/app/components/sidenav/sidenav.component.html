@@ -3,9 +3,19 @@
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="(isHandset$ | async) === false">
+      <div class="email-avatar">
+        <img
+      ngxGravatar
+      [email]="email"
+      src="assets/images/userAvatar.png"
+      [style]=""
+    /> <h2> {{email | titlecase}}</h2>
+      </div>
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
+
       <a *ngFor="let item of menuItems" mat-list-item [routerLink]="item"> {{item | titlecase}} </a>
+      <button mat-button color="secondary" (click)= "onLogout()">Logout</button>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -18,8 +28,10 @@
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>lunchapp</span>
+      <h1>Lunchapp</h1>
+
     </mat-toolbar>
     <router-outlet></router-outlet>
+
   </mat-sidenav-content>
 </mat-sidenav-container>

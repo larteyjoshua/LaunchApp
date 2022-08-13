@@ -36,6 +36,39 @@ export class AppEffects {
       ))
   ));
 
+  passwordReset$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(LoginPageActions.loadPasswordReset),
+    exhaustMap((action) =>
+      this.apiService.passwordReset(action.email).pipe(
+        map(response => CoreActions.displaySuccess({response:response})),
+        catchError(error => of(CoreActions.displayFailure({response: error})))
+      ))
+  ));
+
+  passwordRecover$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(LoginPageActions.loadPasswordRecovery),
+    exhaustMap((action) =>
+      this.apiService.passwordRecovery(action.data).pipe(
+        map(response => LoginPageActions.loadPasswordRecoverySuccess({response:response})),
+        catchError(error => of(CoreActions.displayFailure({response: error})))
+      ))
+  ));
+
+
+  PasswordRecoverSuccess$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(LoginPageActions.loadPasswordRecoverySuccess),
+    tap((data) => {
+      console.log(data)
+    this.router.navigateByUrl('/login');
+    const responseMessage = data.response.msg;
+    this.toastrService.success( responseMessage, 'Success!');
+
+    })
+  ),{ dispatch: false });
+
 
   loginSuccess$ = createEffect(() =>
   this.actions$.pipe(
@@ -48,12 +81,20 @@ export class AppEffects {
     })
   ),{ dispatch: false });
 
+  logoutSuccess$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(LoginPageActions.logout),
+    tap(() => {
+    this.router.navigateByUrl('/');
+    })
+  ),{ dispatch: false });
+
 
   loginFailure$ = createEffect(()=> this.actions$.pipe(
     ofType(LoginPageActions.loadLoginsFailure),
     tap((error) => {
       console.log('error', error.error)
-      this.router.navigateByUrl('/');
+      // this.router.navigateByUrl('/');
       this.toastrService.error( error.error.error.detail, 'Major Error', {
       });
     })
@@ -73,7 +114,7 @@ export class AppEffects {
     ofType(AdminPageActions.createAdmin),
     concatMap((action) => this.apiService.createAdmin(action.data).pipe(
       map((response) =>AdminPageActions.createAdminSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -81,7 +122,7 @@ export class AppEffects {
     ofType(AdminPageActions.updateAdmin),
     concatMap((action) => this.apiService.updateAdmin(action.id,action.data).pipe(
       map((response) => AdminPageActions.updateAdminSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -89,7 +130,7 @@ export class AppEffects {
     ofType(AdminPageActions.deleteAdmin),
     mergeMap((action) => this.apiService.deleteAdmin(action.id).pipe(
       map((response) => AdminPageActions.deleteAdminSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -107,7 +148,7 @@ export class AppEffects {
     ofType(UserPagesActions.createUser),
     concatMap((action) => this.apiService.createUser(action.data).pipe(
       map((response) =>UserPagesActions.createUserSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -115,7 +156,7 @@ export class AppEffects {
     ofType(UserPagesActions.updateUser),
     concatMap((action) => this.apiService.updateUser(action.id,action.data).pipe(
       map((response) => UserPagesActions.updateUserSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -123,7 +164,7 @@ export class AppEffects {
     ofType(UserPagesActions.deleteUser),
     mergeMap((action) => this.apiService.deleteUser(action.id).pipe(
       map((response) => UserPagesActions.deleteUserSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -131,7 +172,7 @@ export class AppEffects {
     ofType(UserPagesActions.UploadRequestAction),
     concatMap(action => this.apiService.bulkCreateUser(action.file).pipe(
       map((response) =>UserPagesActions.createBulkUserSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -150,7 +191,7 @@ export class AppEffects {
     ofType(CompanyPageActions.createCompany),
     concatMap((action) => this.apiService.createCompany(action.data).pipe(
       map((response) =>CompanyPageActions.createCompanySuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -158,7 +199,7 @@ export class AppEffects {
     ofType(CompanyPageActions.updateCompany),
     concatMap((action) => this.apiService.updateCompany(action.id,action.data).pipe(
       map((response) => CompanyPageActions.updateCompanySuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -166,7 +207,7 @@ export class AppEffects {
     ofType(CompanyPageActions.deleteCompany),
     mergeMap((action) => this.apiService.deleteCompany(action.id).pipe(
       map((response) => CompanyPageActions.deleteCompanySuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -184,7 +225,7 @@ export class AppEffects {
     ofType(RiderPageActions.createRider),
     concatMap((action) => this.apiService.createRider(action.data).pipe(
       map((response) =>RiderPageActions.createRiderSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -192,7 +233,7 @@ export class AppEffects {
     ofType(RiderPageActions.updateRider),
     concatMap((action) => this.apiService.updateRider(action.id,action.data).pipe(
       map((response) => RiderPageActions.updateRiderSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -200,7 +241,7 @@ export class AppEffects {
     ofType(RiderPageActions.deleteRider),
     mergeMap((action) => this.apiService.deleteRider(action.id).pipe(
       map((response) => RiderPageActions.deleteRiderSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -209,7 +250,7 @@ export class AppEffects {
     ofType(RolePageActions.loadRoles),
     mergeMap(()  => this.apiService.getAllRoles().pipe(
       map(roles => RolePageActions.loadRolesSuccess({data:roles})),
-      catchError(error => of(RolePageActions.loadRolesFailure({error:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -219,17 +260,17 @@ export class AppEffects {
     ofType(FeedbackPageActions.loadFeedbacks),
     mergeMap(()  => this.apiService.getAllFeedbacks().pipe(
       map(feedbacks => FeedbackPageActions.loadFeedbacksSuccess({data:feedbacks})),
-      catchError(error => of(FeedbackPageActions.loadFeedbacksFailure({error:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
 
-// ==============Account Effects================
-  loadAccount$ = createEffect(()=> this.actions$.pipe(
-    ofType(AccountPageActions.loadAccounts),
-    mergeMap(()  => this.apiService.getAllAccounts().pipe(
-      map(accounts => AccountPageActions.loadAccountsSuccess({data:accounts})),
-      catchError(error => of(AccountPageActions.loadAccountsFailure({error:error})))
+// ==============Cost Effects================
+  loadCost$ = createEffect(()=> this.actions$.pipe(
+    ofType(AccountPageActions.loadCosts),
+    mergeMap(()  => this.apiService.getAllCosts().pipe(
+      map(costs => AccountPageActions.loadCostsSuccess({data:costs})),
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -237,7 +278,7 @@ export class AppEffects {
 // ==============Food Effects================
   loadFood$ = createEffect(()=> this.actions$.pipe(
     ofType(FoodPageActions.loadFoods),
-    mergeMap(()  => this.apiService.getAllfoods().pipe(
+    mergeMap(()  => this.apiService.getAllFoods().pipe(
       map(foods => FoodPageActions.loadFoodsSuccess({data:foods})),
       catchError(error => of(FoodPageActions.loadFoodsFailure({error:error})))
     ))
@@ -246,7 +287,7 @@ export class AppEffects {
     ofType(FoodPageActions.createFood),
     concatMap((action) => this.apiService.createFood(action.data).pipe(
       map((response) =>FoodPageActions.createFoodSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -254,7 +295,7 @@ export class AppEffects {
     ofType(FoodPageActions.updateFood),
     concatMap((action) => this.apiService.updateFood(action.data).pipe(
       map((response) => FoodPageActions.updateFoodSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -262,7 +303,7 @@ export class AppEffects {
     ofType(FoodPageActions.deleteFood),
     mergeMap((action) => this.apiService.deleteFood(action.id).pipe(
       map((response) => FoodPageActions.deleteFoodSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -272,14 +313,14 @@ export class AppEffects {
     ofType(OrderPageActions.loadOrders),
     mergeMap(()  => this.apiService.getAllOrders().pipe(
       map(orders => OrderPageActions.loadOrdersSuccess({data:orders})),
-      catchError(error => of(OrderPageActions.loadOrdersFailure({error:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
   updateOrder$ =createEffect(() => this.actions$.pipe(
     ofType(OrderPageActions.updateOrder),
     concatMap((action) => this.apiService.updateOrder(action.id,action.data).pipe(
       map((response) => OrderPageActions.updateOrderSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -287,7 +328,7 @@ export class AppEffects {
     ofType(OrderPageActions.deleteOrder),
     mergeMap((action) => this.apiService.deleteOrder(action.id).pipe(
       map((response) => OrderPageActions.deleteOrderSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -298,7 +339,7 @@ export class AppEffects {
       ofType(UserRolePageActions.loadUserRoles),
       mergeMap(()  => this.apiService.getAllUserRoles().pipe(
         map(userRoles => UserRolePageActions.loadUserRolesSuccess({data:userRoles})),
-        catchError(error => of(UserRolePageActions.loadUserRolesFailure({error:error})))
+        catchError(error => of(CoreActions.displayFailure({response:error})))
       ))
     )
   );
@@ -308,7 +349,7 @@ export class AppEffects {
     ofType(UserRolePageActions.createUserRole),
     concatMap((action) => this.apiService.createUserRole(action.data).pipe(
       map((response) =>UserRolePageActions.createUserRoleSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -316,7 +357,7 @@ export class AppEffects {
     ofType(UserRolePageActions.updateUserRole),
     concatMap((action) => this.apiService.updateUserRole(action.id,action.data).pipe(
       map((response) => UserRolePageActions.updateUserRoleSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
@@ -324,17 +365,31 @@ export class AppEffects {
     ofType(UserRolePageActions.deleteUserRole),
     mergeMap((action) => this.apiService.deleteUserRole(action.user_id).pipe(
       map((response) => UserRolePageActions.deleteUserRoleSuccess({data:response})),
-      catchError(error => of(CoreActions.deplayFailure({response:error})))
+      catchError(error => of(CoreActions.displayFailure({response:error})))
     ))
   ));
 
 
-  displatFailure$ = createEffect(() => this.actions$.pipe(
-    ofType(CoreActions.deplayFailure),
+  displayFailure$ = createEffect(() => this.actions$.pipe(
+    ofType(CoreActions.displayFailure),
     tap(action => {
       console.log('action', action.response)
       const error = action.response.error.detail || action.response.error
       this.toastrService.warning(error, 'Minor Error', {
+
+      });
+    })
+    ),
+    {dispatch: false}
+    );
+
+
+  displaySuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(CoreActions.displaySuccess),
+    tap(action => {
+      console.log('action', action.response)
+      const successMessage = action.response.msg;
+      this.toastrService.success(successMessage, 'Success!', {
 
       });
     })

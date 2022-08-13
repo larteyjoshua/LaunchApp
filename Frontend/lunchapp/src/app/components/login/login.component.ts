@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators,FormGroup,  } from '@angular/forms'
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/reducers';
-import { ApiServicesService } from '../../services/apiServices.service';
-import { Router } from '@angular/router';
 import { loadLogins } from 'src/app/actions/login.actions';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -17,8 +16,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
      private store: Store<AppState>,
-     private service: ApiServicesService,
-     private router: Router) {
+     private toastrService: ToastrService
+  ) {
 
    }
    loginForm: FormGroup = this.fb.group({
@@ -39,14 +38,6 @@ export class LoginComponent implements OnInit {
     }
     console.log(this.loginForm.value);
    this.store.dispatch(loadLogins({data:this.loginForm.value}) );
-  //  this.service.login(this.loginForm.value).subscribe((token:any) =>{
-  //   console.log(token)
-  //   const accessToken =token.access_token
-  //   localStorage.setItem('token',accessToken);
-  //   this.router.navigateByUrl('home/dashboard')
-  //  }
-
-  //   )
   }
 
 

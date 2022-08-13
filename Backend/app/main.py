@@ -4,7 +4,6 @@ from .utils.database import engine
 from .routers import userLogin, userActivities, superAdminActivities, adminactivities
 from fastapi.middleware.cors import CORSMiddleware
 from app.utils.config import settings
-from app.routers.basicRouters import users, admin, roles, company, riders, foods, orders, feedbacks, account 
 from app.utils import initialsdb
 from sqlalchemy.orm import Session
 from app.utils import database
@@ -57,7 +56,7 @@ get_db = database.get_db
     
     
     
-@app.get("/l")
+@app.get("/hello")
 async def home():
     return {"message": "Hello World"}
 
@@ -65,9 +64,6 @@ async def home():
 async def db_init(db: Session = Depends(get_db)):
         return initialsdb.databaseinit(db)
 
-# @app.get("/")
-# async def home():
-#     return {"message": "Hello World"}
 
 @app.get("/requestinfo")
 def info(request: Request):
@@ -77,18 +73,11 @@ def info(request: Request):
     url = request.url._url
     return { "hostName": hostName, "port": hostPort, "url": url }
     
-# app.include_router(users.router)
-# app.include_router(admin.router)
-# app.include_router(roles.router)
-# app.include_router(company.router)
-# app.include_router(riders.router)
-# app.include_router(foods.router)
-# app.include_router(orders.router)
-# app.include_router(feedbacks.router)
-# app.include_router(account.router)
-
 app.include_router(userLogin.router)
 app.include_router(userActivities.router)
 app.include_router(adminactivities.router)
 app.include_router(superAdminActivities.router)
 
+#celery -A app.billingCeleryJobs.celeryWorker worker -l info -P eventlet
+#celery -A app.billingCeleryJobs.celeryWorker beat --loglevel=info
+#docker run --rm -it --hostname my-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management

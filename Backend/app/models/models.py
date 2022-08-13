@@ -20,7 +20,8 @@ class Company(Base):
     
     addedBy =relationship("User",secondary=association_table,back_populates="companies")
     orders = relationship("Order")
-    account = relationship("Account", uselist=False, back_populates="company")
+    payment = relationship("Payment", uselist=False, back_populates="company")
+    cost = relationship("OrderCost", uselist=False, back_populates="company")
     
 
 class Role(Base):
@@ -56,7 +57,7 @@ class User(Base):
         secondary=association_table,
         back_populates="addedBy", primaryjoin= companyId == Company.id, post_update=True)
     user_role = relationship("UserRole", back_populates="user", uselist=False)
-   
+    payments = relationship("Payment", back_populates="modify_by")
    
     
 class Food(Base):
@@ -112,17 +113,17 @@ class Rider(Base):
     orders = relationship("Order", back_populates="riderowner")
     add_by =relationship("User", primaryjoin= addedBy == User.id, post_update=True)
 
-class Account(Base):
-    __tablename__ = 'accounts'
-    id = Column(Integer, primary_key = True, index =True)
-    companyId = Column(Integer, ForeignKey('company.id'))
-    totalCost = Column(Float)
-    amountPaid = Column(Float)
-    balance = Column(Float)
-    modifyBy = Column(Integer, ForeignKey('users.id'))
-    dateModified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-    company = relationship("Company", back_populates="account")
-    modify_by =relationship("User", primaryjoin= modifyBy == User.id, post_update=True)
+# class Account(Base):
+#     __tablename__ = 'accounts'
+#     id = Column(Integer, primary_key = True, index =True)
+#     companyId = Column(Integer, ForeignKey('company.id'))
+#     totalCost = Column(Float)
+#     amountPaid = Column(Float)
+#     balance = Column(Float)
+#     modifyBy = Column(Integer, ForeignKey('users.id'))
+#     dateModified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+#     company = relationship("Company", back_populates="account")
+#     modify_by =relationship("User", primaryjoin= modifyBy == User.id, post_update=True)
 
 class SotreSummary(Base):
     __tablename__ = 'storeSummaries'
@@ -133,3 +134,38 @@ class SotreSummary(Base):
     percentValue = Column(Float)
     color = Column(String)
     icon = Column(String)
+
+
+class OrderCost(Base):
+    __tablename__ = 'orderCost'
+    id = Column(Integer, primary_key = True, index =True)
+    companyId = Column(Integer, ForeignKey('company.id'))
+    totalCost = Column(Float)
+    generatedBy = Column(Integer, ForeignKey('users.id'))
+    dateGenerated = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    
+    company = relationship("Company", back_populates="cost")
+    modify_by =relationship("User", primaryjoin= generatedBy == User.id, post_update=True)
+
+
+class Payment(Base):
+    __tablename__ = 'payments'
+    id = Column(Integer, primary_key = True, index =True)
+    companyId = Column(Integer, ForeignKey('company.id'))
+    amountPaid = Column(Float)
+    paymentType = Column(String, nullable =False)
+    modifyBy = Column(Integer, ForeignKey('users.id'))
+    paidBy = Column(String, nullable = False)
+    transactionId = Column(String, nullable = False)
+    datePaid = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    balance =   Column(Float, nullable =True)
+    
+    company = relationship("Company", back_populates="payment")
+    modify_by = relationship("User",  back_populates="payments")
+
+
+class JobsRun(Base):
+    __tablename__ = 'jobsRun'
+    id = Column(Integer, primary_key = True, index =True)
+    jobName = Column(String)
+    runTime = Column(DateTime, default=datetime.now, onupdate=datetime.now)

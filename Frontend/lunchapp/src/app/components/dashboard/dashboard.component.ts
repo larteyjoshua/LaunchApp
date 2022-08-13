@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit {
         columns: 4,
         miniCard: { cols: 1, rows: 1 },
         chart: { cols: 2, rows: 2 },
-        table: { cols: 4, rows:2.6 },
+        table: { cols: 4, rows: 4 },
       };
     })
   );

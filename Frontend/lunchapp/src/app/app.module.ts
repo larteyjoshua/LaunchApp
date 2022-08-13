@@ -34,7 +34,6 @@ import { CompaniesComponent } from './components/companies/companies.component';
 import { FoodsComponent } from './components/foods/foods.component';
 import { RolesComponent } from './components/roles/roles.component';
 import { FeedbacksComponent } from './components/feedbacks/feedbacks.component';
-import { AccountsComponent } from './components/accounts/accounts.component';
 import { ForgetPasswordComponent } from './components/forget-password/forget-password.component';
 import { StoreModule } from '@ngrx/store';
 import { lunchAppReducer } from './reducers';
@@ -58,8 +57,12 @@ import { UserRoleEntryComponent } from './components/user-role-entry/user-role-e
 import { RiderEntryComponent } from './components/rider-entry/rider-entry.component';
 import { FoodEntryComponent } from './components/food-entry/food-entry.component';
 import { OrderEntryComponent } from './components/order-entry/order-entry.component';
-import { AccountEntryComponent } from './components/account-entry/account-entry.component';
 import { ToastrModule } from 'ngx-toastr';
+import { CostComponent } from './components/cost/cost.component';
+import { PaymentComponent } from './components/payment/payment.component';
+import { AuthGuardService } from './services/auth-guard.service';
+import { GravatarModule } from 'ngx-gravatar';
+import { PasswordRecoveryComponent } from './components/password-recovery/password-recovery.component';
 
 
 
@@ -79,7 +82,6 @@ import { ToastrModule } from 'ngx-toastr';
     FoodsComponent,
     RolesComponent,
     FeedbacksComponent,
-    AccountsComponent,
     ForgetPasswordComponent,
     FoodOrderedComponent,
     HighestOrderDayComponent,
@@ -96,7 +98,9 @@ import { ToastrModule } from 'ngx-toastr';
     RiderEntryComponent,
     FoodEntryComponent,
     OrderEntryComponent,
-    AccountEntryComponent
+    CostComponent,
+    PaymentComponent,
+    PasswordRecoveryComponent
 
   ],
   imports: [
@@ -119,6 +123,7 @@ import { ToastrModule } from 'ngx-toastr';
      MatMenuModule,
      MatTableModule,
      MatPaginatorModule,
+     GravatarModule,
      MatSortModule,
      StoreModule.forRoot({}),
      StoreModule.forFeature('lunch',lunchAppReducer),
@@ -129,7 +134,8 @@ import { ToastrModule } from 'ngx-toastr';
       timeOut: 10000,
       positionClass: 'toast-top-right',
       preventDuplicates: true,
-    })
+    }),
+
 
   ],
   entryComponents:[
@@ -142,10 +148,9 @@ import { ToastrModule } from 'ngx-toastr';
     RiderEntryComponent,
     FoodEntryComponent,
     OrderEntryComponent,
-    AccountEntryComponent
 
    ],
-  providers: [ApiServicesService],
+  providers: [ApiServicesService, AuthGuardService],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

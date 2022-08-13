@@ -325,5 +325,5 @@ def getEmailMessage(userName: str, email: str, password: str):
 def addBulkUser(userEmail:str, userName: str, password: str):
     subject:str ="LaunchApp welcome New User"
     message = getEmailMessage(userName,userEmail,password)
-    return sendEmailHelper.sendMail(userEmail, message, subject)
+    return sendEmailHelper.sendNormalEmail(userEmail, message, subject)
     

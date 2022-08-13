@@ -6,11 +6,11 @@ from app.utils import schemas
 from fastapi.encoders import jsonable_encoder
 
 
-def create(request: schemas.Feedback, db: Session):
+def create(request: schemas.Feedback, db: Session, current_user):
         new_feedback = models.Feedback(foodId=request.foodId, 
                                comment=request.comment,
                                stars = request.stars,
-                               commentedBy = request.commentedBy)
+                               commentedBy = current_user.id)
         db.add(new_feedback)
         db.commit()
         db.refresh(new_feedback)

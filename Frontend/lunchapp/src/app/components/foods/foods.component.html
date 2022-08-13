@@ -13,7 +13,7 @@
     </mat-form-field>
   </div>
 
-  <mat-grid-list cols="{{ ( cardLayout | async )?.columns }}" rowHeight="200px">
+  <mat-grid-list style="justify-content: space-between; display:flex" cols="{{ ( cardLayout | async )?.columns }}" rowHeight="200px">
     <mat-grid-tile
     *ngFor="let mc of listFoods"
     [colspan]="( cardLayout | async )?.miniCard?.cols"

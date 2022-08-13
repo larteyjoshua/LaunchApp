@@ -9,10 +9,12 @@ import {
    ShowRider,
    ShowOrder,
    ShowFood,
-    ShowFeedback
+    ShowFeedback,
+    ShowCost
    } from '../models/index';
 import * as _ from 'lodash';
 import { detectChange, percentChange } from '../utils/app-utils';
+
 
 
 export const getAppState = createFeatureSelector<AppState>('lunch');
@@ -62,25 +64,42 @@ export const getFeedbacks = createSelector(
   (state) => state.feedbacks
 );
 
-export const getAccounts = createSelector(
+export const getCost = createSelector(
   getAppState,
-  (state) => state.accounts
+  (state) => state.costs
+);
+
+export const getPayment = createSelector(
+  getAppState,
+  (state) => state.payments
 );
 
 export const getError = createSelector(
   getAppState,
   (state) => state.fileUploadError
-)
+);
 
 export const getStatus = createSelector(
   getAppState,
   (state) => state.status
-)
+);
 
 export const getInProgress = createSelector(
   getAppState,
   (state) => state.progress
-)
+);
+
+export const getToken = createSelector(
+  getAppState,
+  (state) => state.token
+);
+
+export const getUserName = createSelector(
+  getAppState,
+
+  (state) => state.userName
+);
+
 export const getAdminsDetails = createSelector(
   getAdmins,
   getUserRole,
@@ -243,7 +262,7 @@ export const getOrdersWithUserDetails = createSelector(
           }
       });
     }
-    return newOrdersWithDetails;
+    return newOrdersWithDetails.sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());;
   }
 );
 
@@ -379,7 +398,7 @@ export const getFoodOrderList = createSelector(
     });
     return groupArrays
   }
-)
+);
 
 export const getHighestOrderPerday = createSelector(
   getOrdersWithUserDetails,
@@ -404,7 +423,7 @@ export const getHighestOrderPerday = createSelector(
     const selectedGroup = sortedGroup.slice(0,5)
     return selectedGroup
   }
-)
+);
 
 export const getTodaysOrder = createSelector(
   getOrdersWithUserDetails,
@@ -415,12 +434,49 @@ export const getTodaysOrder = createSelector(
     yesterday.setDate(yesterday.getDate() - 1)
     console.log('yesterday', yesterday)
     let today = new Date();
-    today.setHours(10, 30);
+    today.setHours(23, 30);
     console.log('today',today)
     let newOrders = orders.filter((data) =>
-      new Date(data.orderDate).getTime()  <= new Date(today).getTime() &&
-      new Date(data.orderDate).getTime() >= new Date(yesterday).getTime()
+      new Date(data.orderDate).getTime() >= new Date(yesterday).getTime() &&
+      new Date(data.orderDate).getTime()  <= new Date(today).getTime()
     )
     return newOrders;
+  }
+);
+
+export const getCostWithdetails = createSelector(
+  getCost,
+  getCompanies,
+  getAdmins,
+  (costs:ShowCost[], companies: ShowCompany[], admins: ShowAdmin[]) => {
+
+    let costArray:ShowCost[] =[];
+
+    if (costs && companies && admins){
+      console.log('cost', costs)
+      console.log('comp', companies)
+      console.log('users', admins)
+      costArray = costs.map((a:any) =>
+      ({...companies.find(p => a.companyId === p.id), ...a}));
+
+      costArray = costArray.map((a:any) =>
+      ({...admins.find(p => a.generatedBy === p.id), ...a}));
+
+      costArray = costArray.map((a:any) => {
+        return {
+          id: a.id,
+          companyId: a.companyId,
+          totalCost: a.totalCost,
+          generatedBy: a.fullName,
+          dateGenerated: a.dateGenerated,
+          company: a.name,
+          }
+
+      });
+
+    }
+    return costArray;
+
+
   }
 )

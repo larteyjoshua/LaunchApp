@@ -7,7 +7,6 @@ import { AppState } from 'src/app/reducers';
 import { getRiders } from 'src/app/selectors/index.selectors';
 import { FormServicesService } from 'src/app/services/form-services.service';
 import { updateOrder } from '../../actions/order.actions';
-import { OrdersComponent } from '../orders/orders.component';
 
 @Component({
   selector: 'app-order-entry',
@@ -21,7 +20,7 @@ export class OrderEntryComponent implements OnInit {
   stages = ['delivered','shipped', 'confirm', 'withRider', 'cancel', 'pending confirmation']
 
   constructor(
-    public dialogRef: MatDialogRef<OrdersComponent>,
+    public dialogRef: MatDialogRef<OrderEntryComponent>,
     public formService: FormServicesService,
     private store: Store<AppState>,
   ) {

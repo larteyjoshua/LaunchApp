@@ -11,54 +11,77 @@ import { CompaniesComponent } from './components/companies/companies.component';
 import { FoodsComponent } from './components/foods/foods.component';
 import { RolesComponent } from './components/roles/roles.component';
 import { FeedbacksComponent } from './components/feedbacks/feedbacks.component';
-import { AccountsComponent } from './components/accounts/accounts.component';
 import { ForgetPasswordComponent } from './components/forget-password/forget-password.component';
+import { PaymentComponent } from './components/payment/payment.component';
+import { CostComponent } from './components/cost/cost.component';
+import { AuthGuardService } from './services/auth-guard.service';
+import { PasswordRecoveryComponent } from './components/password-recovery/password-recovery.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'login',
     component: LoginComponent
   },
-
   {
-    path: 'forgetpassword',
-    component: ForgetPasswordComponent
+  path: '',
+  redirectTo: 'login',
+  pathMatch: 'full'
+ },
+  {
+    path: 'forget-password',
+    component: ForgetPasswordComponent,
+    pathMatch: 'full'
 
+  },
+  {
+    path: 'passwordRecover',
+     component: PasswordRecoveryComponent
   },
 
   {
     path: 'admin',
     component: ContainerComponent,
+    canActivate: [AuthGuardService],
+    canLoad: [AuthGuardService],
+    canActivateChild:  [AuthGuardService],
+
     children: [
       {
         path: 'dashboard',
-        component: DashboardComponent
+        component: DashboardComponent,
       },
+
       {
         path: 'users',
-        component: UsersComponent
+        component: UsersComponent,
       },
+
       {
         path: 'admins',
-        component: AdminsComponent
+        component: AdminsComponent,
+
       },
+
       {
         path: 'orders',
-        component: OrdersComponent
+        component: OrdersComponent,
+
       },
+
       {
         path: 'riders',
-        component: RidersComponent
+        component: RidersComponent,
       },
+
       {
         path: 'companies',
-        component: CompaniesComponent
+        component: CompaniesComponent,
       },
+
       {
         path: 'foods',
-        component: FoodsComponent
-      }
-    ,
+        component: FoodsComponent,
+      },
     {
       path: 'roles',
       component: RolesComponent
@@ -68,11 +91,16 @@ const routes: Routes = [
       component: FeedbacksComponent
     },
     {
-      path: 'accounts',
-      component: AccountsComponent
+      path: 'payments',
+      component: PaymentComponent
+    },
+
+    {
+      path: 'costs',
+      component: CostComponent
     }
 
-    ]
+    ],
   }
 ];
 

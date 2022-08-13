@@ -1,0 +1,59 @@
+
+/* MENU ITEM STYLING */
+
+.dashboardMenuItem {
+    border-radius: 15px;
+    margin-top: 20px;
+    width: 340px;
+    height: 380px;
+    margin: 20px;
+    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+    background-color: #FFFF;
+    color: black;
+  }
+  .dashboardMenuItem:hover {
+    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.5);
+    transition: 0.3s ease-in;
+    cursor: pointer;
+  }
+  .addCart {
+ 
+  padding-right:3px;
+  }
+  .dashboardMenuItem div {
+
+    margin: auto;
+    width: 100%;
+    height: 200px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .feedbackDialog {
+    margin: auto;
+    justify-content: center;
+    align-content: center;
+    padding-left: 44px;
+
+
+  }
+  
+  .dashboardMenuItem h1,
+  .dashboardMenuItem p {
+    justify-content: center;
+    align-items: center;  
+  }
+  
+  @media only screen and (max-width: 1300px) {
+    .dashboardMenuItem {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+
+  @media only screen and (max-width: 800px) {
+    .dashboardMenuItem {
+      grid-template-columns: 1fr;
+    }
+  }

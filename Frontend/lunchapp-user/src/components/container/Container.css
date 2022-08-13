@@ -1,0 +1,57 @@
+.toolbar  {
+    background-color: #00302E;
+}
+
+ .logoArea {
+    flex: 50%;
+    display: flex;
+    margin-top: 30px;
+    height: 20px;
+    flex-direction: row;
+    color: #FBDDBB;
+    padding-left: 8px;
+    align-items: center;
+  }
+  .logoArea img {
+    width: 40px;
+  }
+
+  .iconList {
+    color: #FBDDBB;
+  }
+  .menuList {
+    width: 70vw;
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    place-items: center;
+  }
+  .dashboardMain {
+background-color:#FBDDBB ;
+  }
+  
+  .flexGrow {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    padding-left:15px;
+}
+
+.right-hold{
+  display:-webkit-box;
+	display:-moz-box;
+  display:-ms-flexbox;
+	display:-webkit-flex;
+	display:flex;
+	margin-left: auto;
+	align-items:center;
+}
+
+.right-hold span{
+  position: relative;
+  padding-top: 7px;
+  -left:15px;
+}
+
+.right-hold  avatar{width:30px;}

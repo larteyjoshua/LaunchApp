@@ -2,3 +2,6 @@
 /Backend/Backend.iml
 __pycache__/
 /Backend/.env
+/Backend/celerybeat-schedule.bak
+/Backend/celerybeat-schedule.dat
+/Backend/celerybeat-schedule.dir

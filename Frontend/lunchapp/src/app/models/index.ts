@@ -131,23 +131,41 @@ export interface ShowRider {
   add_by?: string;
 }
 
-export interface PaymentAccount {
+export interface CreatPayment {
   companyId: number;
   totalCost: number;
   amountPaid: number;
   balance: number;
   modifyBy: number;
+  paymentType: string;
+  paidBy: string;
+  transactionId: string;
 }
 
-export interface ShowAccount {
+export interface ShowPayment {
   id: number;
   companyId: number;
   totalCost: number;
   amountPaid: number;
   balance: number;
   modifyBy: number;
-  dateModified: Date;
+  paymentType: string;
+  paidBy: string;
+  transactionId: string;
+  datePaid: Date;
+  company?: string;
 }
+
+export interface ShowCost{
+  id: number;
+  companyId: number;
+  totalCost: number;
+  company?: string;
+  generatedBy: number;
+  dateGenerated: Date;
+}
+
+
 
 export interface CreateAdmin {
   fullName: string;
@@ -181,5 +199,10 @@ export enum UploadStatus {
   Started = 'Started',
   Failed = 'Failed',
   Completed = 'Completed'
+}
+
+export interface PasswordRecover {
+  token: string;
+  new_password: string;
 }
 
